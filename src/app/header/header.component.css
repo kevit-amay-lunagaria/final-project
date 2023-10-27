@@ -1,0 +1,9 @@
+.active {
+  /* background-color: #dbe2ef; */
+  color: #f9f7f7;
+  border-radius: 1rem;
+}
+
+#nav-div {
+  background-color: #112d4e;
+}

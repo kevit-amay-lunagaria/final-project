@@ -1,0 +1,51 @@
+<div class="flex flex-row justify-center">
+  <div class="flex flex-row flex-wrap justify-center">
+    <mat-card
+      class="m-4 w-[280px] product-card md:w-[300px] lg-[400px]"
+      *ngFor="let i of counter(11)"
+    >
+      <mat-card-header>
+        <img mat-card-sm-image class="object-cover rounded-md" [src]="img" />
+        <mat-card-title-group class="pl-4">
+          <mat-card-title>
+            <span class="text-lg font-bold">
+              {{ title }}
+            </span>
+          </mat-card-title>
+          <mat-card-subtitle>
+            <span class="text-sm">
+              {{ subTitle }}
+            </span>
+          </mat-card-subtitle>
+        </mat-card-title-group>
+      </mat-card-header>
+      <div class="flex flex-row justify-between">
+        <div
+          class="flex flex-row items-center justify-center w-1/2 align-middle"
+        >
+          <button class="flex" (click)="onDecrement(i)">
+            <span class="material-symbols-outlined"> remove </span>
+          </button>
+
+          <input
+            class="mx-3 text-center focus:border-b-[1px] focus:border-[#181818] focus:border-spacing-1"
+            type="text"
+            size="4"
+            min="0"
+            [value]="productCount"
+            maxlength="3"
+            onkeypress="return (event.charCode == 8 || event.charCode == 0) ? null : event.charCode >= 48 && event.charCode <= 57"
+          />
+          <button class="flex" (click)="onIncrement(i)">
+            <span class="material-symbols-outlined"> add </span>
+          </button>
+        </div>
+        <div class="flex flex-col w-1/2">
+          <button class="rounded-sm mx-auto my-4 bg-[#bfcfee] hover:rounded-lg">
+            <span class="p-2"> Add to cart </span>
+          </button>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
