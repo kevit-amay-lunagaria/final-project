@@ -1,21 +1,114 @@
+<div class="new-product-backdrop" *ngIf="newProductToggle"></div>
+<div class="w-1/2 p-8 rounded-lg new-product-form" *ngIf="newProductToggle">
+  <h1 class="text-3xl font-semibold text-center text-[#3f72af]">Add Product</h1>
+  <form
+    action=""
+    [formGroup]="productForm"
+    (ngSubmit)="onSubmit()"
+    class="mt-7"
+  >
+    <label for="productname" class="block text-lg font-semibold">
+      <span class="asterisk">*</span>
+      Name:
+    </label>
+    <input
+      class="block w-[95%] m-1 mb-8 mx-3 px-3 text-md product-input"
+      type="text"
+      formControlName="pname"
+    />
+    <label for="productname" class="block text-lg font-semibold">
+      <span class="asterisk">*</span>
+      Image URL:
+    </label>
+    <input
+      class="block w-[95%] m-1 mb-8 mx-3 px-3 text-md product-input"
+      type="text"
+      #imageURL
+      formControlName="pimage"
+    />
+    <div class="flex justify-center border-dashed row" *ngIf="imageURL.value">
+      <img [src]="imageURL.value" class="object-cover rounded-md h-60" alt="" />
+    </div>
+    <div
+      class="flex flex-col items-center justify-between my-8 space-y-4 xl:space-y-0 xl:flex-row"
+    >
+      <div
+        class="flex flex-row items-center justify-around w-full my-2 xl:mt-0"
+      >
+        <label for="productname" class="text-lg font-semibold">
+          <span class="asterisk">*</span>
+          Quantity:
+        </label>
+        <input
+          class="px-3 m-1 mx-3 w-[60%] text-md product-input text-center"
+          type="number"
+          maxlength="3"
+          formControlName="pquantity"
+          onkeypress="return (event.charCode == 8 || event.charCode == 0) ? null : event.charCode >= 48 && event.charCode <= 57"
+        />
+      </div>
+      <div class="flex flex-row items-center justify-around w-full">
+        <label for="productname" class="text-lg font-semibold">
+          <span class="asterisk">*</span>
+          Price:
+        </label>
+        <input
+          class="px-3 m-1 w-[60%] mx-3 text-md product-input text-center"
+          type="number"
+          maxlength="3"
+          formControlName="pprice"
+          onkeypress="return (event.charCode == 8 || event.charCode == 0) ? null : event.charCode >= 48 && event.charCode <= 57"
+        />
+      </div>
+    </div>
+    <div class="flex flex-row justify-center space-x-4">
+      <button
+        class="p-2 px-8 font-semibold text-white bg-blue-700 rounded-md hover:ring-2 hover:ring-blue-600 hover:bg-blue-200 hover:text-black focus:ring-2 focus:ring-blue-600 focus:bg-white focus:text-black"
+      >
+        Add
+      </button>
+      <button
+        class="p-2 px-8 font-semibold text-white bg-red-700 rounded-md hover:ring-2 hover:ring-red-600 hover:bg-red-200 hover:text-black focus:ring-2 focus:ring-red-600 focus:bg-white focus:text-black"
+        (click)="onAddNewProduct()"
+      >
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>
+<div class="flex flex-row-reverse h-10">
+  <button
+    (click)="onAddNewProduct()"
+    class="p-2 px-5 font-medium text-white bg-green-600 rounded-lg hover:bg-green-800 hover:font-semibold"
+  >
+    Add new product
+  </button>
+</div>
 <div class="flex flex-row justify-center">
   <div class="flex flex-row flex-wrap justify-center">
     <mat-card
       class="m-4 w-[280px] product-card md:w-[300px] lg-[400px]"
-      *ngFor="let i of counter(11)"
+      *ngFor="let product of productList; index as i"
     >
       <mat-card-header>
-        <img mat-card-sm-image class="object-cover rounded-md" [src]="img" />
-        <mat-card-title-group class="pl-4">
+        <img
+          mat-card-md-image
+          class="object-cover rounded-md"
+          [src]="product.productImage"
+        />
+        <mat-card-title-group class="flex-col pl-4">
           <mat-card-title>
             <span class="text-lg font-bold">
-              {{ title }}
+              {{ product.productName }}
             </span>
           </mat-card-title>
           <mat-card-subtitle>
-            <span class="text-sm">
-              {{ subTitle }}
+            <span class="float-left text-sm">
+              {{ product.productPrice | currency : "INR" : "symbol-narrow" }}
             </span>
+            <span class="float-right text-sm"
+              >({{ product.productQuantity }})</span
+            >
           </mat-card-subtitle>
         </mat-card-title-group>
       </mat-card-header>
@@ -23,7 +116,10 @@
         <div
           class="flex flex-row items-center justify-center w-1/2 align-middle"
         >
-          <button class="flex" (click)="onDecrement(i)">
+          <button
+            class="flex rounded-sm ring-1 active:shadow-inner"
+            (click)="onDecrement(i)"
+          >
             <span class="material-symbols-outlined"> remove </span>
           </button>
 
@@ -32,16 +128,22 @@
             type="text"
             size="4"
             min="0"
-            [value]="productCount"
+            readonly
+            [max]="product.productQuantity"
+            [(ngModel)]="product.productPurchased"
+            [value]="product.productPurchased"
             maxlength="3"
+            (keydown.enter)="onHandlePurchase(i, product.productPurchased)"
             onkeypress="return (event.charCode == 8 || event.charCode == 0) ? null : event.charCode >= 48 && event.charCode <= 57"
           />
-          <button class="flex" (click)="onIncrement(i)">
+          <button class="flex rounded-sm ring-1" (click)="onIncrement(i)">
             <span class="material-symbols-outlined"> add </span>
           </button>
         </div>
         <div class="flex flex-col w-1/2">
-          <button class="rounded-sm mx-auto my-4 bg-[#bfcfee] hover:rounded-lg">
+          <button
+            class="rounded-sm mx-auto p-1 px-3 my-4 bg-[#bfcfee] hover:rounded-lg"
+          >
             <span class="p-2"> Add to cart </span>
           </button>
         </div>
