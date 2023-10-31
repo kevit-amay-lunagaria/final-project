@@ -1,6 +1,9 @@
+<!-- PRODUCT FORM STARTS HERE -->
+
 <div class="new-product-backdrop" *ngIf="newProductToggle"></div>
 <div class="w-1/2 p-8 rounded-lg new-product-form" *ngIf="newProductToggle">
   <h1 class="text-3xl font-semibold text-center text-[#3f72af]">Add Product</h1>
+
   <form
     action=""
     [formGroup]="productForm"
@@ -10,23 +13,62 @@
     <label for="productname" class="block text-lg font-semibold">
       <span class="asterisk">*</span>
       Name:
+      <span
+        class="float-right reactive-span"
+        *ngIf="
+          !productForm.get('productName').valid &&
+          productForm.get('productName').touched
+        "
+      >
+        <span
+          class="reactive-span"
+          *ngIf="productForm.get('productName').errors['required']"
+        >
+          This field is required!
+        </span>
+      </span>
     </label>
     <input
       class="block w-[95%] m-1 mb-8 mx-3 px-3 text-md product-input"
       type="text"
-      formControlName="pname"
+      placeholder="E.g. New Product"
+      formControlName="productName"
     />
-    <label for="productname" class="block text-lg font-semibold">
+    <label for="productimage" class="block text-lg font-semibold">
       <span class="asterisk">*</span>
       Image URL:
+      <span
+        class="float-right reactive-span"
+        *ngIf="
+          !productForm.get('productImage').valid &&
+          productForm.get('productImage').touched
+        "
+      >
+        <span
+          class="reactive-span"
+          *ngIf="productForm.get('productImage').errors['required']"
+        >
+          This field is required!
+        </span>
+        <span
+          class="reactive-span"
+          *ngIf="productForm.get('productImage').errors['notProperImageFormat']"
+        >
+          Not in proper format!
+        </span>
+      </span>
     </label>
     <input
       class="block w-[95%] m-1 mb-8 mx-3 px-3 text-md product-input"
       type="text"
       #imageURL
-      formControlName="pimage"
+      placeholder="Product image link goes here..."
+      formControlName="productImage"
     />
-    <div class="flex justify-center border-dashed row" *ngIf="imageURL.value">
+    <div
+      class="flex justify-center py-2 border-2 border-dashed row"
+      *ngIf="!productForm.get('productImage').errors?.notProperImageFormat"
+    >
       <img [src]="imageURL.value" class="object-cover rounded-md h-60" alt="" />
     </div>
     <div
@@ -35,57 +77,108 @@
       <div
         class="flex flex-row items-center justify-around w-full my-2 xl:mt-0"
       >
-        <label for="productname" class="text-lg font-semibold">
+        <label for="productquantity" class="text-lg font-semibold">
           <span class="asterisk">*</span>
           Quantity:
+          <!-- <span
+            class="reactive-span"
+            *ngIf="
+              !productForm.get('productQuantity').valid &&
+              productForm.get('productQuantity').touched
+            "
+          >
+            <span
+              class="reactive-span"
+              *ngIf="productForm.get('productQuantity').errors['required']"
+            >
+              This field is required!
+            </span>
+          </span> -->
         </label>
         <input
           class="px-3 m-1 mx-3 w-[60%] text-md product-input text-center"
           type="number"
-          maxlength="3"
-          formControlName="pquantity"
+          max="1000"
+          min="1"
+          placeholder="E.g. 10"
+          formControlName="productQuantity"
           onkeypress="return (event.charCode == 8 || event.charCode == 0) ? null : event.charCode >= 48 && event.charCode <= 57"
         />
       </div>
       <div class="flex flex-row items-center justify-around w-full">
-        <label for="productname" class="text-lg font-semibold">
+        <label for="productprice" class="text-lg font-semibold">
           <span class="asterisk">*</span>
           Price:
+          <!-- <span
+            class="reactive-span"
+            *ngIf="
+              !productForm.get('productPrice').valid &&
+              productForm.get('productPrice').touched
+            "
+          >
+            <span
+              class="reactive-span"
+              *ngIf="productForm.get('productPrice').errors['required']"
+            >
+              This field is required!
+            </span>
+          </span> -->
         </label>
+        &#x20b9;
         <input
           class="px-3 m-1 w-[60%] mx-3 text-md product-input text-center"
           type="number"
-          maxlength="3"
-          formControlName="pprice"
-          onkeypress="return (event.charCode == 8 || event.charCode == 0) ? null : event.charCode >= 48 && event.charCode <= 57"
+          max="999"
+          min="10"
+          placeholder="E.g. &#x20b9;50"
+          formControlName="productPrice"
+          onkeypress="return (event.charCode == 8 || event.charCode == 0) ? null : event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46"
         />
       </div>
     </div>
     <div class="flex flex-row justify-center space-x-4">
       <button
+        type="submit"
         class="p-2 px-8 font-semibold text-white bg-blue-700 rounded-md hover:ring-2 hover:ring-blue-600 hover:bg-blue-200 hover:text-black focus:ring-2 focus:ring-blue-600 focus:bg-white focus:text-black"
       >
-        Add
+        {{ isEditMode ? "Update" : "Add" }}
       </button>
       <button
+        type="button"
         class="p-2 px-8 font-semibold text-white bg-red-700 rounded-md hover:ring-2 hover:ring-red-600 hover:bg-red-200 hover:text-black focus:ring-2 focus:ring-red-600 focus:bg-white focus:text-black"
-        (click)="onAddNewProduct()"
+        (click)="onCancel()"
       >
         Cancel
       </button>
     </div>
   </form>
 </div>
+
+<!-- PRODUCT FORM ENDS HERE -->
+
+<!-- ADD PRODUCT AND LOADER STARTS HERE -->
+
 <div class="flex flex-row-reverse h-10">
   <button
-    (click)="onAddNewProduct()"
+    (click)="onAddNewProductToggle()"
     class="p-2 px-5 font-medium text-white bg-green-600 rounded-lg hover:bg-green-800 hover:font-semibold"
   >
     Add new product
   </button>
 </div>
+
+<div *ngIf="!contentLoaded" class="flex flex-row mx-auto mt-5 lds-ripple">
+  <div></div>
+  <div></div>
+</div>
+
+<!-- ADD PRODUCT AND LOADER ENDS HERE -->
+
+<!-- PRODUCTS LIST START HERE -->
+
 <div class="flex flex-row justify-center">
   <div class="flex flex-row flex-wrap justify-center">
+    <!-- PRODUCT CARD STARTS HERE -->
     <mat-card
       class="m-4 w-[280px] product-card md:w-[300px] lg-[400px]"
       *ngFor="let product of productList; index as i"
@@ -93,7 +186,7 @@
       <mat-card-header>
         <img
           mat-card-md-image
-          class="object-cover rounded-md"
+          class="flex-col object-cover rounded-md"
           [src]="product.productImage"
         />
         <mat-card-title-group class="flex-col pl-4">
@@ -106,10 +199,26 @@
             <span class="float-left text-sm">
               {{ product.productPrice | currency : "INR" : "symbol-narrow" }}
             </span>
-            <span class="float-right text-sm"
-              >({{ product.productQuantity }})</span
-            >
+            <span class="float-right text-sm">
+              ({{ product.productQuantity }})
+            </span>
           </mat-card-subtitle>
+          <div class="flex flex-row items-center justify-between align-middle">
+            <button
+              type="button"
+              (click)="onEditProduct(i)"
+              class="px-2 py-1 text-blue-700 rounded-md hover:bg-blue-100"
+            >
+              <span class="text-xl material-symbols-outlined"> edit </span>
+            </button>
+            <button
+              type="button"
+              class="px-2 py-1 text-red-700 rounded-md hover:bg-red-100"
+              (click)="onDeleteProduct(i)"
+            >
+              <span class="text-xl material-symbols-outlined"> delete </span>
+            </button>
+          </div>
         </mat-card-title-group>
       </mat-card-header>
       <div class="flex flex-row justify-between">
@@ -123,8 +232,9 @@
             <span class="material-symbols-outlined"> remove </span>
           </button>
 
+          <!-- focus:border-b-[1px] focus:border-[#181818] focus:border-spacing-1 -->
           <input
-            class="mx-3 text-center focus:border-b-[1px] focus:border-[#181818] focus:border-spacing-1"
+            class="mx-3 text-center"
             type="text"
             size="4"
             min="0"
@@ -149,5 +259,9 @@
         </div>
       </div>
     </mat-card>
+    <!-- PRODUCT CARD ENDS HERE -->
   </div>
 </div>
+
+<!-- PRODUCTS LIST ENDS HERE -->
+<img src="" alt="" />

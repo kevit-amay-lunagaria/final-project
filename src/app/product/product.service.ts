@@ -14,4 +14,10 @@ export class ProductService {
   getProductList() {
     return this.http.get<Product[]>(this.url);
   }
+
+  updateProductList(newProduct: Product[]) {
+    return this.http.put<Product>(this.url, newProduct).subscribe((res) => {
+      console.log(res);
+    });
+  }
 }
