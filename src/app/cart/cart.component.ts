@@ -2,6 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Product } from '../product/product.model';
 import { ProductService } from '../product/product.service';
 import { CartService } from './cart.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-cart',
@@ -10,39 +12,41 @@ import { CartService } from './cart.service';
 })
 export class CartComponent implements OnInit, OnDestroy {
   productList: Product[] = [];
-  isProductListEmpty: boolean = false;
   changedProductList: Product[] = [];
+  isProductListEmpty: boolean = false;
   contentLoaded: boolean = false;
   totalItems: number = 0;
   subTotal: number = 0;
+  productListSub: Subscription;
 
   constructor(
     private productService: ProductService,
-    private cartService: CartService
+    private cartService: CartService,
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
     setTimeout(() => {
-      this.productService.getProductList().subscribe((res: Product[]) => {
-        for (let i = 0; i < res.length; i++) {
-          this.changedProductList.push(res[i]);
-          if (res[i].productPurchased != 0) {
-            this.productList.push(res[i]);
-            this.totalItems += res[i].productPurchased;
-            this.subTotal += res[i].productPrice * res[i].productPurchased;
+      this.productListSub = this.productService
+        .getProductList()
+        .subscribe((res: Product[]) => {
+          for (let i = 0; i < res.length; i++) {
+            this.changedProductList.push(res[i]);
+            if (res[i].productPurchased != 0) {
+              this.productList.push(res[i]);
+              this.totalItems += res[i].productPurchased;
+              this.subTotal += res[i].productPrice * res[i].productPurchased;
+            }
           }
-        }
-        this.contentLoaded = true;
-        if (this.productList.length == 0) {
-          this.isProductListEmpty = true;
-        } else {
-          this.isProductListEmpty = false;
-        }
-      });
-    }, 1500);
-
-    // console.log(this.productList);
-    // console.log(this.changedProductList);
+          this.contentLoaded = true;
+          if (this.productList.length == 0) {
+            this.isProductListEmpty = true;
+          } else {
+            this.isProductListEmpty = false;
+          }
+        });
+    }, 1100);
   }
 
   onIncrement(index: number) {
@@ -74,8 +78,6 @@ export class CartComponent implements OnInit, OnDestroy {
       this.productList[index].productQuantity++;
       this.productList.splice(index, 1);
 
-      // console.log(this.changedProductList);
-
       this.productService.updateProductList(this.changedProductList);
       if (this.productList.length == 0) {
         this.isProductListEmpty = true;
@@ -101,6 +103,8 @@ export class CartComponent implements OnInit, OnDestroy {
     if (this.isProductListEmpty) {
       return;
     }
+    this.cartService.getAddedProducts(this.changedProductList);
     this.productService.updateProductList(this.changedProductList);
+    this.productListSub.unsubscribe();
   }
 }

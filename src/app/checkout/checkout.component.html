@@ -1,0 +1,34 @@
+<div class="container flex flex-col" *ngIf="contentLoaded">
+  <div class="my-6">
+    <h2 class="text-4xl text-center">Bill</h2>
+  </div>
+  <div class="flex flex-col p-4 text-center">
+    <table class="m-4 table-auto">
+      <tr>
+        <th>Sr.</th>
+        <th>Product</th>
+        <th>Purchased</th>
+        <th>Price Per Piece</th>
+        <th>Total</th>
+      </tr>
+      <tr *ngFor="let product of cartList; index as i">
+        <td>{{ i + 1 }}</td>
+        <td>{{ product.productName }}</td>
+        <td>{{ product.productPurchased }}</td>
+        <td>{{ product.productPrice | currency : "INR" : "symbol-narrow" }}</td>
+        <td>
+          {{
+            product.productPurchased * product.productPrice
+              | currency : "INR" : "symbol-narrow"
+          }}
+        </td>
+      </tr>
+      <tr>
+        <td colspan="4" class="text-xl font-semibold text-end">Grand Total:</td>
+        <td class="">
+          {{ grandTotal | currency : "INR" : "symbol-narrow" }}
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>

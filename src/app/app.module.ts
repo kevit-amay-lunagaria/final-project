@@ -12,6 +12,7 @@ import { MyMaterialModule } from './mymaterial.module';
 import { AuthComponent } from './auth/auth.component';
 import { HttpClientModule } from '@angular/common/http';
 import { CartComponent } from './cart/cart.component';
+import { CheckoutComponent } from './checkout/checkout.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { CartComponent } from './cart/cart.component';
     ErrorPageComponent,
     AuthComponent,
     CartComponent,
+    CheckoutComponent,
   ],
   imports: [
     BrowserModule,

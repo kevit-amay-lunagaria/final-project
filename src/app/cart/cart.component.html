@@ -1,3 +1,12 @@
+<div class="flex flex-row justify-between h-10 mb-4">
+  <button
+    routerLink="/products"
+    class="p-2 px-5 font-medium text-white rounded-lg bg-slate-600 hover:bg-neutral-800 hover:font-semibold"
+  >
+    Go back to store
+  </button>
+</div>
+
 <div *ngIf="!contentLoaded" class="flex flex-row mx-auto mt-5 lds-ripple">
   <div></div>
   <div></div>
@@ -11,6 +20,7 @@
 >
   <div class="flex flex-row flex-wrap justify-start">
     <!-- PRODUCT CARD STARTS HERE -->
+
     <mat-card
       class="m-4 w-[280px] product-card md:w-[300px] lg:w-[400px]"
       *ngFor="let product of productList; index as i"
@@ -70,24 +80,33 @@
         </mat-card-title-group>
       </mat-card-header>
     </mat-card>
+
     <!-- PRODUCT CARD ENDS HERE -->
   </div>
 
   <!-- TOTAL ITEMS AND SUB-TOTAL STARTS -->
 
-  <div class="flex flex-col items-center p-4">
+  <div class="flex flex-col items-center justify-between p-4">
     <div class="flex flex-col items-start w-[300px]">
       <h3 class="text-md">Total items: &nbsp; {{ totalItems }}</h3>
       <h2 class="text-2xl">
-        Sub total: &nbsp; {{ subTotal | currency : "INR" : "symbol-narrow" }}
+        Subtotal: &nbsp; {{ subTotal | currency : "INR" : "symbol-narrow" }}
       </h2>
     </div>
+    <button
+      routerLink="/checkout"
+      class="p-2 px-8 font-semibold text-white bg-green-700 rounded-md hover:bg-green-900"
+    >
+      Checkout
+    </button>
   </div>
+
+  <!-- TOTAL ITEMS AND SUB-TOTAL ENDS -->
 </div>
 
-<!-- TOTAL ITEMS AND SUB-TOTAL ENDS -->
-
 <!-- PRODUCTS LIST ENDS HERE -->
+
+<!-- IF THE CART IS EMPTY BELOW CODE WILL BE RENDERED -->
 
 <div class="flex flex-col items-center" *ngIf="isProductListEmpty">
   <h3 class="my-4 mt-8 text-4xl">Uh-oh.... Looks like the cart is empty!</h3>
@@ -97,3 +116,5 @@
     alt=""
   />
 </div>
+
+<!-- EMPTY CART CODE ENDS HERE -->

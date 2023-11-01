@@ -158,12 +158,17 @@
 
 <!-- ADD PRODUCT AND LOADER STARTS HERE -->
 
-<div class="flex flex-row-reverse h-10">
+<div class="flex flex-row justify-between h-10">
   <button
     (click)="onAddNewProductToggle()"
     class="p-2 px-5 font-medium text-white bg-green-600 rounded-lg hover:bg-green-800 hover:font-semibold"
   >
     Add new product
+  </button>
+  <button routerLink="/cart"
+    class="p-2 px-5 font-medium text-white rounded-lg bg-[#3f73af] hover:bg-[#274f79] hover:font-semibold"
+  >
+    Go to Cart
   </button>
 </div>
 

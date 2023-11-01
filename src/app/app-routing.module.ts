@@ -4,6 +4,7 @@ import { ProductComponent } from './product/product.component';
 import { ErrorPageComponent } from './error-page/error-page.component';
 import { AuthComponent } from './auth/auth.component';
 import { CartComponent } from './cart/cart.component';
+import { CheckoutComponent } from './checkout/checkout.component';
 
 const routes: Routes = [
   // { path: '', redirectTo: '/products', pathMatch: 'full' },
@@ -18,6 +19,10 @@ const routes: Routes = [
   {
     path: 'cart',
     component: CartComponent,
+  },
+  {
+    path: 'checkout',
+    component: CheckoutComponent,
   },
   { path: '**', component: ErrorPageComponent },
 ];
