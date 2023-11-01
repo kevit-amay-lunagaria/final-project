@@ -176,7 +176,7 @@
 
 <!-- PRODUCTS LIST START HERE -->
 
-<div class="flex flex-row justify-center">
+<div class="flex flex-row justify-center mt-4">
   <div class="flex flex-row flex-wrap justify-center">
     <!-- PRODUCT CARD STARTS HERE -->
     <mat-card
@@ -226,7 +226,7 @@
           class="flex flex-row items-center justify-center w-1/2 align-middle"
         >
           <button
-            class="flex rounded-sm ring-1 active:shadow-inner"
+            class="flex rounded-sm ring-1 active:shadow-[0_0_4px_0_rgba(0,0,0,0.4)]"
             (click)="onDecrement(i)"
           >
             <span class="material-symbols-outlined"> remove </span>
@@ -245,7 +245,10 @@
             maxlength="3"
             onkeypress="return (event.charCode == 8 || event.charCode == 0) ? null : event.charCode >= 48 && event.charCode <= 57"
           />
-          <button class="flex rounded-sm ring-1" (click)="onIncrement(i)">
+          <button
+            class="flex rounded-sm ring-1 active:shadow-[0_0_4px_0_rgba(0,0,0,0.4)]"
+            (click)="onIncrement(i)"
+          >
             <span class="material-symbols-outlined"> add </span>
           </button>
         </div>

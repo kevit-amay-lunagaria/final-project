@@ -5,8 +5,11 @@
 
 <!-- PRODUCTS LIST STARTS HERE -->
 
-<div class="flex flex-row justify-center" *ngIf="!isProductListEmpty">
-  <div class="flex flex-row flex-wrap justify-center">
+<div
+  class="flex flex-row justify-between"
+  *ngIf="!isProductListEmpty && contentLoaded"
+>
+  <div class="flex flex-row flex-wrap justify-start">
     <!-- PRODUCT CARD STARTS HERE -->
     <mat-card
       class="m-4 w-[280px] product-card md:w-[300px] lg:w-[400px]"
@@ -37,7 +40,7 @@
               class="flex flex-row items-center justify-center my-4 align-middle"
             >
               <button
-                class="flex rounded-sm ring-1 active:shadow-inner"
+                class="flex rounded-sm ring-1 active:shadow-[0_0_4px_0_rgba(0,0,0,0.4)]"
                 (click)="onDecrement(i)"
               >
                 <span class="material-symbols-outlined"> remove </span>
@@ -56,7 +59,10 @@
                 maxlength="3"
                 onkeypress="return (event.charCode == 8 || event.charCode == 0) ? null : event.charCode >= 48 && event.charCode <= 57"
               />
-              <button class="flex rounded-sm ring-1" (click)="onIncrement(i)">
+              <button
+                class="flex rounded-sm ring-1 active:shadow-[0_0_4px_0_rgba(0,0,0,0.4)]"
+                (click)="onIncrement(i)"
+              >
                 <span class="material-symbols-outlined"> add </span>
               </button>
             </div>
@@ -66,7 +72,20 @@
     </mat-card>
     <!-- PRODUCT CARD ENDS HERE -->
   </div>
+
+  <!-- TOTAL ITEMS AND SUB-TOTAL STARTS -->
+
+  <div class="flex flex-col items-center p-4">
+    <div class="flex flex-col items-start w-[300px]">
+      <h3 class="text-md">Total items: &nbsp; {{ totalItems }}</h3>
+      <h2 class="text-2xl">
+        Sub total: &nbsp; {{ subTotal | currency : "INR" : "symbol-narrow" }}
+      </h2>
+    </div>
+  </div>
 </div>
+
+<!-- TOTAL ITEMS AND SUB-TOTAL ENDS -->
 
 <!-- PRODUCTS LIST ENDS HERE -->
 

@@ -19,14 +19,6 @@ export class CartService {
   getAddedProducts(products: Product[]) {
     this.addedProducts = products;
     this.cart.cartProducts = products;
-
-    // this.http.put<Product[]>(this.urlProduct, products).subscribe((res) => {
-    //   console.log(res);
-    // });
-
-    // this.http.put<Cart>(this.urlCart, this.cart).subscribe((res) => {
-    //   console.log(res);
-    // });
   }
 
   // showCartProducts() {

@@ -13,6 +13,8 @@ export class CartComponent implements OnInit, OnDestroy {
   isProductListEmpty: boolean = false;
   changedProductList: Product[] = [];
   contentLoaded: boolean = false;
+  totalItems: number = 0;
+  subTotal: number = 0;
 
   constructor(
     private productService: ProductService,
@@ -26,6 +28,8 @@ export class CartComponent implements OnInit, OnDestroy {
           this.changedProductList.push(res[i]);
           if (res[i].productPurchased != 0) {
             this.productList.push(res[i]);
+            this.totalItems += res[i].productPurchased;
+            this.subTotal += res[i].productPrice * res[i].productPurchased;
           }
         }
         this.contentLoaded = true;
@@ -43,8 +47,15 @@ export class CartComponent implements OnInit, OnDestroy {
 
   onIncrement(index: number) {
     if (this.productList[index].productQuantity == 0) return;
+    this.subTotal -=
+      this.productList[index].productPrice *
+      this.productList[index].productPurchased;
     this.productList[index].productQuantity--;
     this.productList[index].productPurchased++;
+    this.totalItems++;
+    this.subTotal +=
+      this.productList[index].productPrice *
+      this.productList[index].productPurchased;
     return;
   }
 
@@ -53,6 +64,12 @@ export class CartComponent implements OnInit, OnDestroy {
       let changedIndex = this.changedProductList.indexOf(
         this.productList[index]
       );
+
+      this.totalItems--;
+
+      this.subTotal -=
+        this.productList[index].productPrice *
+        this.productList[index].productPurchased;
       this.changedProductList[changedIndex].productPurchased = 0;
       this.productList[index].productQuantity++;
       this.productList.splice(index, 1);
@@ -66,8 +83,18 @@ export class CartComponent implements OnInit, OnDestroy {
       return;
     }
 
+    this.totalItems--;
+
+    this.subTotal -=
+      this.productList[index].productPrice *
+      this.productList[index].productPurchased;
+
     this.productList[index].productQuantity++;
     this.productList[index].productPurchased--;
+
+    this.subTotal +=
+      this.productList[index].productPrice *
+      this.productList[index].productPurchased;
   }
 
   ngOnDestroy(): void {
