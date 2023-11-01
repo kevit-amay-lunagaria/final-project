@@ -3,6 +3,7 @@ import { ProductService } from './product.service';
 import { Product } from './product.model';
 import { Subscription } from 'rxjs';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { CartService } from '../cart/cart.service';
 
 @Component({
   selector: 'app-product',
@@ -18,6 +19,7 @@ export class ProductComponent implements OnInit, OnDestroy {
   productForm: any;
   isEditMode: boolean = false;
   updatedProductIndex: number = -1;
+  addedToCart: Product[] = [];
   product: Product = {
     productName: null,
     productImage: null,
@@ -26,7 +28,10 @@ export class ProductComponent implements OnInit, OnDestroy {
     productPurchased: 0,
   };
 
-  constructor(private productService: ProductService) {}
+  constructor(
+    private productService: ProductService,
+    private cartService: CartService
+  ) {}
 
   ngOnInit(): void {
     setTimeout(() => {
@@ -81,11 +86,18 @@ export class ProductComponent implements OnInit, OnDestroy {
     this.productList[index].productPurchased--;
   }
 
-  onHandlePurchase(index: number, purchased: number) {
-    if (purchased > this.productList[index].productQuantity) return;
-    this.productList[index].productQuantity -= purchased;
-    this.purchase += +purchased;
+  onAddToCart(index: number) {
+    if (this.productList[index].productPurchased == 1) return;
+    this.productList[index].productQuantity--;
+    this.productList[index].productPurchased++;
   }
+
+  // onHandlePurchase(index: number, purchased: number) {
+  //   // (keydown.enter)="onHandlePurchase(i, product.productPurchased)"
+  //   if (purchased > this.productList[index].productQuantity) return;
+  //   this.productList[index].productQuantity -= purchased;
+  //   this.purchase += +purchased;
+  // }
 
   // totalPurchase(index: number) {
   //   // (blur)="totalPurchase(i)"
@@ -163,11 +175,11 @@ export class ProductComponent implements OnInit, OnDestroy {
     ) {
       return { notProperImageFormat: true };
     }
-
     return null;
   }
 
   ngOnDestroy(): void {
+    this.productService.updateProductList(this.productList);
     this.productListSub.unsubscribe();
   }
 }

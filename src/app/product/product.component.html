@@ -180,7 +180,7 @@
   <div class="flex flex-row flex-wrap justify-center">
     <!-- PRODUCT CARD STARTS HERE -->
     <mat-card
-      class="m-4 w-[280px] product-card md:w-[300px] lg-[400px]"
+      class="m-4 w-[280px] product-card md:w-[300px] lg:w-[400px]"
       *ngFor="let product of productList; index as i"
     >
       <mat-card-header>
@@ -243,7 +243,6 @@
             [(ngModel)]="product.productPurchased"
             [value]="product.productPurchased"
             maxlength="3"
-            (keydown.enter)="onHandlePurchase(i, product.productPurchased)"
             onkeypress="return (event.charCode == 8 || event.charCode == 0) ? null : event.charCode >= 48 && event.charCode <= 57"
           />
           <button class="flex rounded-sm ring-1" (click)="onIncrement(i)">
@@ -252,9 +251,12 @@
         </div>
         <div class="flex flex-col w-1/2">
           <button
-            class="rounded-sm mx-auto p-1 px-3 my-4 bg-[#bfcfee] hover:rounded-lg"
+            (click)="onAddToCart(i)"
+            class="rounded-sm mx-auto p-1 px-3 my-4 bg-[#bfcfee] hover:rounded-lg active:bg-blue-500 active:text-white active:font-semibold"
           >
-            <span class="p-2"> Add to cart </span>
+            <span class="p-2">
+              {{ product.productPurchased ? "Added" : "Add to cart" }}
+            </span>
           </button>
         </div>
       </div>
@@ -264,4 +266,3 @@
 </div>
 
 <!-- PRODUCTS LIST ENDS HERE -->
-<img src="" alt="" />
