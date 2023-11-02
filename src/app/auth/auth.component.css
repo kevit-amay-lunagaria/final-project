@@ -37,3 +37,40 @@ span {
   color: #dc143c;
   font-weight: 300;
 }
+
+.radio-label {
+  position: relative;
+  padding: 1rem;
+  padding-inline: 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.radio-button {
+  display: none;
+
+  &:checked + .radio-label {
+    background-color: #5a93d3;
+    color: #f1f1f1;
+
+    &:nth-of-type(1) {
+      border-radius: 999rem 0px 0px 999rem;
+    }
+
+    &:nth-of-type(2) {
+      border-radius: 0px 999rem 999rem 0px;
+    }
+  }
+}
+
+#radio-button-toggle {
+  border: 2px solid #5a93d3;
+  border-radius: 999rem;
+  > * {
+    flex: 0 0 33.33%;
+  }
+
+  &:after {
+    border-radius: 999rem;
+  }
+}

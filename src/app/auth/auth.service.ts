@@ -21,6 +21,8 @@ export class AuthService {
   isAuthenticated: boolean = false;
   user = new BehaviorSubject<AuthUser>(null);
   private tokenExpirationTimer: any;
+  userRole: string = '';
+  userDataToBeShared: AuthUser;
 
   private urlSignUp: string =
     'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDVMLaQkLU8k3l_1Xn9rMMuK7S3gVunoHA';
@@ -30,6 +32,7 @@ export class AuthService {
   constructor(private http: HttpClient, private router: Router) {}
 
   onSignUp(user: User) {
+    this.userRole = user.userRole;
     return this.http
       .post<AuthResponseData>(this.urlSignUp, {
         email: user.userEmail,
@@ -60,6 +63,7 @@ export class AuthService {
   }
 
   onLogIn(user: User) {
+    this.userRole = user.userRole;
     return this.http
       .post<AuthResponseData>(this.urlLogIn, {
         email: user.userEmail,
@@ -100,6 +104,9 @@ export class AuthService {
       return;
     }
 
+    this.userRole = localStorage.getItem('userRole');
+    this.userDataToBeShared = JSON.parse(localStorage.getItem('userData'));
+
     const loadedUser = new AuthUser(
       userData.email,
       userData.id,
@@ -114,7 +121,6 @@ export class AuthService {
         new Date().getTime();
       this.autoLogout(expirationDuration);
     }
-
     this.isAuthenticated = true;
   }
 
@@ -123,6 +129,7 @@ export class AuthService {
     this.user.next(null);
     this.router.navigate(['/auth']);
     localStorage.removeItem('userData');
+    localStorage.removeItem('userRole');
     if (this.tokenExpirationTimer) {
       clearTimeout(this.tokenExpirationTimer);
     }
@@ -148,7 +155,9 @@ export class AuthService {
     this.user.next(user);
     // console.log(user);
     this.autoLogout(expiresIn * 1000);
+    this.userDataToBeShared = user;
     localStorage.setItem('userData', JSON.stringify(user));
+    localStorage.setItem('userRole', this.userRole);
   }
 
   private handleError = (errorResponse) => {

@@ -1,7 +1,10 @@
 <!-- PRODUCT FORM STARTS HERE -->
 
-<div class="new-product-backdrop" *ngIf="newProductToggle"></div>
-<div class="w-1/2 p-8 rounded-lg new-product-form" *ngIf="newProductToggle">
+<div class="new-product-backdrop" *ngIf="newProductToggle && isSeller"></div>
+<div
+  class="w-1/2 p-8 rounded-lg new-product-form"
+  *ngIf="newProductToggle && isSeller"
+>
   <h1 class="text-3xl font-semibold text-center text-[#3f72af]">Add Product</h1>
 
   <form
@@ -67,7 +70,10 @@
     />
     <div
       class="flex justify-center py-2 border-2 border-dashed row"
-      *ngIf="!productForm.get('productImage').errors?.notProperImageFormat && imageURL.value"
+      *ngIf="
+        !productForm.get('productImage').errors?.notProperImageFormat &&
+        imageURL.value
+      "
     >
       <img [src]="imageURL.value" class="object-cover rounded-md h-60" alt="" />
     </div>
@@ -160,13 +166,15 @@
 
 <div class="flex flex-row justify-between h-10">
   <button
+    *ngIf="isSeller"
     (click)="onAddNewProductToggle()"
     class="p-2 px-5 font-medium text-white bg-green-600 rounded-lg hover:bg-green-800 hover:font-semibold"
   >
     Add new product
   </button>
-  <button routerLink="/cart"
-    class="p-2 px-5 font-medium text-white rounded-lg bg-[#3f73af] hover:bg-[#274f79] hover:font-semibold"
+  <button
+    routerLink="/cart"
+    class="p-2 px-5 ml-auto font-medium text-white rounded-lg bg-[#3f73af] hover:bg-[#274f79] hover:font-semibold"
   >
     Go to Cart
   </button>
@@ -208,7 +216,7 @@
               ({{ product.productQuantity }})
             </span>
           </mat-card-subtitle>
-          <div class="flex flex-row items-center justify-between align-middle">
+          <div class="flex flex-row items-center justify-between align-middle" *ngIf="isSeller">
             <button
               type="button"
               (click)="onEditProduct(i)"

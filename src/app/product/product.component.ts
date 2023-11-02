@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { CartService } from '../cart/cart.service';
 import { AuthService } from '../auth/auth.service';
+import { Cart } from '../cart/cart.model';
 
 @Component({
   selector: 'app-product',
@@ -12,15 +13,17 @@ import { AuthService } from '../auth/auth.service';
   styleUrls: ['./product.component.css'],
 })
 export class ProductComponent implements OnInit, OnDestroy {
-  contentLoaded: boolean = false;
-  productList: Product[] = [];
-  productListSub: Subscription;
-  purchase: number = 0;
-  newProductToggle: boolean = false;
   productForm: any;
+  productList: Product[] = [];
+  cart: Cart;
+  productListSub: Subscription;
+  newProductToggle: boolean = false;
+  contentLoaded: boolean = false;
   isEditMode: boolean = false;
+  isSeller: boolean = false;
+  checkEmail: boolean = false;
   updatedProductIndex: number = -1;
-  addedToCart: Product[] = [];
+  purchase: number = 0;
   product: Product = {
     productName: null,
     productImage: null,
@@ -36,8 +39,30 @@ export class ProductComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    if(this.authService.isAuthenticated){
-      
+    if (this.authService.isAuthenticated) {
+      if (this.authService.userRole === 'buyer') {
+        this.isSeller = false;
+      } else {
+        this.isSeller = true;
+      }
+      this.cartService.getCarts().subscribe((res: Cart[]) => {
+        for (let i = 0; i < res.length; i++) {
+          if (res[i].userEmail === this.authService.userDataToBeShared.email) {
+            this.checkEmail = true;
+          }
+        }
+        if (!this.checkEmail) {
+          res.push({
+            userEmail: this.authService.userDataToBeShared.email,
+            cartProducts: [],
+          });
+
+          this.cartService.addCart(res);
+        }
+        console.log(res);
+      });
+      if (true) {
+      }
     }
     setTimeout(() => {
       this.productListSub = this.productService
@@ -184,7 +209,9 @@ export class ProductComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.productService.updateProductList(this.productList);
+    if (this.authService.isAuthenticated) {
+      this.productService.updateProductList(this.productList);
+    }
     this.productListSub.unsubscribe();
   }
 }

@@ -12,11 +12,10 @@ import { Router } from '@angular/router';
 })
 export class AuthComponent implements OnInit {
   userForm: any;
-  userEmail: string = '';
-  userPassword: string = '';
   isLogin: boolean = false;
   authSub: Subscription;
   isAuthenticated: boolean = false;
+  seller: boolean = false;
 
   constructor(private authService: AuthService, private router: Router) {}
 
@@ -29,12 +28,21 @@ export class AuthComponent implements OnInit {
     this.userForm = new FormGroup({
       userFirstName: new FormControl(null, [Validators.required]),
       userLastName: new FormControl(null, [Validators.required]),
+      userRole: new FormControl('buyer', [Validators.required]),
       userEmail: new FormControl(null, [
         Validators.required,
         Validators.pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$'),
       ]),
       userPassword: new FormControl(null, Validators.required),
     });
+  }
+
+  onLogin() {
+    this.isLogin = !this.isLogin;
+  }
+
+  isSeller() {
+    this.seller = !this.seller;
   }
 
   onSubmit() {
@@ -53,18 +61,5 @@ export class AuthComponent implements OnInit {
       return;
     }
     this.authSub = this.authService.onSignUp(this.userForm.value);
-
-    // authObservable.subscribe({
-    //   next: (resData) => {
-    //     console.log(resData);
-    //   },
-    //   error: (error) => {
-    //     console.log(error);
-    //   },
-    // });
-  }
-
-  onLogin() {
-    this.isLogin = !this.isLogin;
   }
 }

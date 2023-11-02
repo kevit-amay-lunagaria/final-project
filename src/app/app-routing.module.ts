@@ -1,14 +1,10 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-import { ProductComponent } from './product/product.component';
 import { ErrorPageComponent } from './error-page/error-page.component';
-import { AuthComponent } from './auth/auth.component';
-import { CartComponent } from './cart/cart.component';
-import { CheckoutComponent } from './checkout/checkout.component';
 import { AuthGuard } from './auth/auth-guard';
 
 const routes: Routes = [
-  // { path: '', redirectTo: '/products', pathMatch: 'full' },
+  { path: '', redirectTo: '/auth', pathMatch: 'full' },
   {
     path: 'auth',
     loadChildren: () =>

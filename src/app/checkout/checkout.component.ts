@@ -4,6 +4,7 @@ import { CartService } from '../cart/cart.service';
 import { Subscription } from 'rxjs';
 import { Cart } from '../cart/cart.model';
 import { ProductService } from '../product/product.service';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-checkout',
@@ -20,7 +21,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
   constructor(
     private cartService: CartService,
-    private productService: ProductService
+    private productService: ProductService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -28,17 +30,32 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       .getProductList()
       .subscribe((res: Product[]) => {
         this.productList = res.slice();
+        console.log(this.productList);
       });
+
     setTimeout(() => {
       this.cartListSub = this.cartService
         .showCartProducts()
-        .subscribe((res: Cart) => {
-          for (let i = 0; i < res.cartProducts.length; i++) {
-            if (res.cartProducts[i].productPurchased != 0) {
-              this.cartList.push(res.cartProducts[i]);
-              this.grandTotal +=
-                res.cartProducts[i].productPrice *
-                res.cartProducts[i].productPurchased;
+        .subscribe((res: Cart[]) => {
+          console.log(this.authService.userDataToBeShared.email);
+          for (let i = 0; i < res.length; i++) {
+            console.log(
+              res[i].userEmail === this.authService.userDataToBeShared.email
+            );
+            if (
+              res[i].userEmail === this.authService.userDataToBeShared.email
+            ) {
+              for (let j = 0; j < res[i].cartProducts.length; j++) {
+                if (res[i].cartProducts[j].productPurchased != 0) {
+                  this.cartList.push(res[i].cartProducts[j]);
+                  this.grandTotal +=
+                    res[i].cartProducts[j].productPrice *
+                    res[i].cartProducts[j].productPurchased;
+                  console.log(res[i]);
+                }
+              }
+            } else {
+              continue;
             }
           }
           this.contentLoaded = true;

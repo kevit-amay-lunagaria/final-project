@@ -4,6 +4,7 @@ import { ProductService } from '../product/product.service';
 import { CartService } from './cart.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-cart',
@@ -22,11 +23,15 @@ export class CartComponent implements OnInit, OnDestroy {
   constructor(
     private productService: ProductService,
     private cartService: CartService,
+    private authService: AuthService,
     private router: Router,
     private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
+    this.cartService.showCartProducts().subscribe((res) => {
+      console.log(res);
+    });
     setTimeout(() => {
       this.productListSub = this.productService
         .getProductList()
@@ -103,6 +108,9 @@ export class CartComponent implements OnInit, OnDestroy {
     if (this.isProductListEmpty) {
       return;
     }
+    // if (this.authService.isAuthenticated) {
+    //   this.productService.updateProductList(this.productList);
+    // }
     this.cartService.getAddedProducts(this.changedProductList);
     this.productService.updateProductList(this.changedProductList);
     this.productListSub.unsubscribe();
