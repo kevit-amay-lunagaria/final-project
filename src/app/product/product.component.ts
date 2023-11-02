@@ -4,6 +4,7 @@ import { Product } from './product.model';
 import { Subscription } from 'rxjs';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { CartService } from '../cart/cart.service';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-product',
@@ -30,10 +31,14 @@ export class ProductComponent implements OnInit, OnDestroy {
 
   constructor(
     private productService: ProductService,
-    private cartService: CartService
+    private cartService: CartService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
+    if(this.authService.isAuthenticated){
+      
+    }
     setTimeout(() => {
       this.productListSub = this.productService
         .getProductList()

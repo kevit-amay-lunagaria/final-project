@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { ProductComponent } from './product/product.component';
 import { ErrorPageComponent } from './error-page/error-page.component';
 import { AuthComponent } from './auth/auth.component';
@@ -11,27 +11,33 @@ const routes: Routes = [
   // { path: '', redirectTo: '/products', pathMatch: 'full' },
   {
     path: 'auth',
-    component: AuthComponent,
+    loadChildren: () =>
+      import('./auth/auth.module').then((am) => am.AuthModule),
   },
   {
     path: 'products',
-    component: ProductComponent,
+    loadChildren: () =>
+      import('./product/product.module').then((pdt) => pdt.ProductModule),
   },
   {
     path: 'cart',
-    component: CartComponent,
+    loadChildren: () =>
+      import('./cart/cart.module').then((crt) => crt.CartModule),
     canActivate: [AuthGuard],
   },
   {
     path: 'checkout',
-    component: CheckoutComponent,
+    loadChildren: () =>
+      import('./checkout/checkout.module').then((chkt) => chkt.CheckoutModule),
     canActivate: [AuthGuard],
   },
   { path: '**', component: ErrorPageComponent },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [
+    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules }),
+  ],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}
