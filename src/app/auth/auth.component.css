@@ -10,9 +10,6 @@ input[type="number"] {
 }
 
 input {
-  /* border: 0;
-  border-radius: 0px; */
-  /* border-bottom: 1px solid #3f72af; */
   background-color: transparent;
   padding-right: 0px !important;
 }

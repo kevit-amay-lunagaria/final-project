@@ -3,7 +3,7 @@
     id="nav-div"
     class="p-3 rounded-lg shadow-[0_0_60px_0_rgba(0,0,0,0.4)] items-center"
   >
-    <nav class="text-[#3F73AF]">
+    <nav class="text-[#3F73AF] text-">
       <ul class="flex flex-row items-center text-xl">
         <li routerLinkActive="active">
           <a
@@ -29,13 +29,13 @@
         </li>
         <li class="ml-auto" routerLinkActive="active">
           <a
-            routerLink="/login"
+            routerLink="/auth"
             class="font-semibold flex active:text-[#dbe2ef]"
           >
             <span
               class="hover:bg-[#3F73AF] hover:text-[#dbe2ef] rounded-full p-[7px] material-symbols-outlined"
             >
-              login
+              {{ isAuthenticated ? "logout" : "login" }}
             </span>
             <!-- logout -->
           </a>

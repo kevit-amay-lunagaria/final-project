@@ -67,7 +67,7 @@
     />
     <div
       class="flex justify-center py-2 border-2 border-dashed row"
-      *ngIf="!productForm.get('productImage').errors?.notProperImageFormat"
+      *ngIf="!productForm.get('productImage').errors?.notProperImageFormat && imageURL.value"
     >
       <img [src]="imageURL.value" class="object-cover rounded-md h-60" alt="" />
     </div>

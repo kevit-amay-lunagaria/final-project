@@ -5,11 +5,12 @@ import { ErrorPageComponent } from './error-page/error-page.component';
 import { AuthComponent } from './auth/auth.component';
 import { CartComponent } from './cart/cart.component';
 import { CheckoutComponent } from './checkout/checkout.component';
+import { AuthGuard } from './auth/auth-guard';
 
 const routes: Routes = [
   // { path: '', redirectTo: '/products', pathMatch: 'full' },
   {
-    path: 'login',
+    path: 'auth',
     component: AuthComponent,
   },
   {
@@ -19,10 +20,12 @@ const routes: Routes = [
   {
     path: 'cart',
     component: CartComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: 'checkout',
     component: CheckoutComponent,
+    canActivate: [AuthGuard],
   },
   { path: '**', component: ErrorPageComponent },
 ];
