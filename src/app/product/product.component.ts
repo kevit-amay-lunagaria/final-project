@@ -49,6 +49,7 @@ export class ProductComponent implements OnInit, OnDestroy {
         for (let i = 0; i < res.length; i++) {
           if (res[i].userEmail === this.authService.userDataToBeShared.email) {
             this.checkEmail = true;
+            break;
           }
         }
         if (!this.checkEmail) {
@@ -59,7 +60,6 @@ export class ProductComponent implements OnInit, OnDestroy {
 
           this.cartService.addCart(res);
         }
-        console.log(res);
       });
       if (true) {
       }

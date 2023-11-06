@@ -1,4 +1,4 @@
-<div class="flex flex-row justify-between h-10 mb-4">
+<div class="flex flex-row justify-between h-10 px-4 mb-4">
   <button
     routerLink="/products"
     class="p-2 px-5 font-medium text-white rounded-lg bg-slate-600 hover:bg-neutral-800 hover:font-semibold"
@@ -15,7 +15,7 @@
 <!-- PRODUCTS LIST STARTS HERE -->
 
 <div
-  class="flex flex-row justify-between"
+  class="flex flex-col items-center sm:justify-between sm:flex-row"
   *ngIf="!isProductListEmpty && contentLoaded"
 >
   <div class="flex flex-row flex-wrap justify-start">
@@ -86,8 +86,8 @@
 
   <!-- TOTAL ITEMS AND SUB-TOTAL STARTS -->
 
-  <div class="flex flex-col items-center justify-between p-4">
-    <div class="flex flex-col items-start w-[300px]">
+  <div class="flex flex-col items-center justify-between p-4 space-y-8">
+    <div class="flex flex-col space-y-1 items-start w-[300px]">
       <h3 class="text-md">Total items: &nbsp; {{ totalItems }}</h3>
       <h2 class="text-2xl">
         Subtotal: &nbsp; {{ subTotal | currency : "INR" : "symbol-narrow" }}
@@ -109,7 +109,7 @@
 <!-- IF THE CART IS EMPTY BELOW CODE WILL BE RENDERED -->
 
 <div class="flex flex-col items-center" *ngIf="isProductListEmpty">
-  <h3 class="my-4 mt-8 text-4xl">Uh-oh.... Looks like the cart is empty!</h3>
+  <h3 class="px-4 my-4 mt-8 text-4xl">Uh-oh.... Looks like the cart is empty!</h3>
   <img
     class="mt-8 rounded-full w-[512px]"
     src="https://cdn3.iconfinder.com/data/icons/infinicons-shopping-carts/100/shopping_Sad-512.png"

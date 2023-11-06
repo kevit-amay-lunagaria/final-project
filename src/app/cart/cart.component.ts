@@ -14,11 +14,13 @@ import { AuthService } from '../auth/auth.service';
 export class CartComponent implements OnInit, OnDestroy {
   productList: Product[] = [];
   changedProductList: Product[] = [];
+  cartList: Product[] = [];
   isProductListEmpty: boolean = false;
   contentLoaded: boolean = false;
   totalItems: number = 0;
   subTotal: number = 0;
   productListSub: Subscription;
+  cartListSub: Subscription;
 
   constructor(
     private productService: ProductService,
@@ -30,7 +32,12 @@ export class CartComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.cartService.showCartProducts().subscribe((res) => {
-      console.log(res);
+      for (let i = 0; i < res.length; i++) {
+        if (res[i].userEmail == this.authService.userDataToBeShared.email) {
+          this.cartList = res[i].cartProducts;
+          break;
+        }
+      }
     });
     setTimeout(() => {
       this.productListSub = this.productService
@@ -40,18 +47,56 @@ export class CartComponent implements OnInit, OnDestroy {
             this.changedProductList.push(res[i]);
             if (res[i].productPurchased != 0) {
               this.productList.push(res[i]);
-              this.totalItems += res[i].productPurchased;
-              this.subTotal += res[i].productPrice * res[i].productPurchased;
             }
           }
+
+          if (this.cartList === undefined) {
+            this.cartList = [];
+          }
+
+          for (let i = 0; i < this.cartList.length; i++) {
+            const index = this.productList.findIndex(
+              (e) => e.productName === this.cartList[i].productName
+            );
+
+            console.log(index);
+
+            if (index === -1) {
+              if (this.cartList[i].productPurchased != 0) {
+                this.productList.push(this.cartList[i]);
+              }
+            } else {
+              // this.productList[index].productPurchased =
+              //   this.productList[index].productPurchased +
+              //   this.cartList[index].productPurchased;
+              // this.cartList[index].productQuantity =
+              //   this.productList[index].productQuantity;
+              // this.cartList[index].productQuantity =
+              //   this.productList[index].productQuantity;
+            }
+          }
+
+          for (let i = 0; i < this.productList.length; i++) {
+            if (this.productList[i].productPurchased != 0) {
+              this.totalItems += this.productList[i].productPurchased;
+              this.subTotal +=
+                this.productList[i].productPrice *
+                this.productList[i].productPurchased;
+            }
+          }
+
           this.contentLoaded = true;
           if (this.productList.length == 0) {
             this.isProductListEmpty = true;
           } else {
             this.isProductListEmpty = false;
           }
+          console.log(...this.cartList);
+          console.log(...this.productList);
+          console.log(...this.changedProductList);
+          this.cartList = this.productList;
         });
-    }, 1100);
+    }, 3000);
   }
 
   onIncrement(index: number) {
@@ -108,11 +153,33 @@ export class CartComponent implements OnInit, OnDestroy {
     if (this.isProductListEmpty) {
       return;
     }
-    // if (this.authService.isAuthenticated) {
-    //   this.productService.updateProductList(this.productList);
+    
+    console.log(...this.cartList);
+    console.log(...this.productList);
+    // this.cartService.getAddedProducts([]);
+    this.cartService.getAddedProducts(this.cartList);
+
+    // for (let i = 0; i < this.changedProductList.length; i++) {
+    //   if (this.changedProductList[i].productPurchased != 0) {
+    //     this.changedProductList[i].productPurchased = 0;
+    //   }
     // }
-    this.cartService.getAddedProducts(this.changedProductList);
+
+    for (let i = 0; i < this.cartList.length; i++) {
+      const index = this.changedProductList.findIndex(
+        (e) => e.productName === this.cartList[i].productName
+      );
+
+      if (index === -1) {
+        continue;
+      } else {
+        this.changedProductList[index] = this.cartList[index];
+      }
+    }
+
     this.productService.updateProductList(this.changedProductList);
+    console.log(...this.changedProductList);
+
     this.productListSub.unsubscribe();
   }
 }

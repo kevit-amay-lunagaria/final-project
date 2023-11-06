@@ -37,11 +37,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       this.cartListSub = this.cartService
         .showCartProducts()
         .subscribe((res: Cart[]) => {
-          console.log(this.authService.userDataToBeShared.email);
+          console.log(res[0].cartProducts);
           for (let i = 0; i < res.length; i++) {
-            console.log(
-              res[i].userEmail === this.authService.userDataToBeShared.email
-            );
             if (
               res[i].userEmail === this.authService.userDataToBeShared.email
             ) {
@@ -54,6 +51,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
                   console.log(res[i]);
                 }
               }
+              break;
             } else {
               continue;
             }
@@ -70,7 +68,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         this.productList[i].productPurchased = 0;
       }
     }
-    this.cartList.length = 0;
+    console.log(this.cartList);
+    this.cartList.splice(0, this.cartList.length);
     this.cartService.getAddedProducts(this.cartList);
     this.productService.updateProductList(this.productList);
     this.productListSub.unsubscribe();

@@ -17,13 +17,17 @@ export class CartService {
   constructor(private http: HttpClient, private authService: AuthService) {}
 
   getAddedProducts(products: Product[]) {
-    this.getCarts().subscribe((res: Cart[]) => {
+    return this.showCartProducts().subscribe((res: Cart[]) => {
       this.cart = res;
       for (let i = 0; i < this.cart.length; i++) {
         if (
           this.cart[i].userEmail == this.authService.userDataToBeShared.email
         ) {
-          this.cart[i].cartProducts = products;
+          // if (this.cart[i].cartProducts === undefined) {
+          //   this.cart[i].cartProducts = [];
+          // }
+          this.cart[i].cartProducts = [];
+          this.cart[i].cartProducts.push(...products);
           this.addCart(this.cart);
           return;
         }
