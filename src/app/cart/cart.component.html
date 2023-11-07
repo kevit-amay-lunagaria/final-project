@@ -5,6 +5,12 @@
   >
     Go back to store
   </button>
+  <button
+    (click)="onSaveCart()"
+    class="p-2 px-5 ml-auto font-medium text-white rounded-lg bg-[#3f73af] hover:bg-[#274f79] hover:font-semibold"
+  >
+    Save Cart
+  </button>
 </div>
 
 <div *ngIf="!contentLoaded" class="flex flex-row mx-auto mt-5 lds-ripple">
@@ -109,7 +115,9 @@
 <!-- IF THE CART IS EMPTY BELOW CODE WILL BE RENDERED -->
 
 <div class="flex flex-col items-center" *ngIf="isProductListEmpty">
-  <h3 class="px-4 my-4 mt-8 text-4xl">Uh-oh.... Looks like the cart is empty!</h3>
+  <h3 class="px-4 my-4 mt-8 text-4xl">
+    Uh-oh.... Looks like the cart is empty!
+  </h3>
   <img
     class="mt-8 rounded-full w-[512px]"
     src="https://cdn3.iconfinder.com/data/icons/infinicons-shopping-carts/100/shopping_Sad-512.png"

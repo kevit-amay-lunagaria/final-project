@@ -6,6 +6,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { CartService } from '../cart/cart.service';
 import { AuthService } from '../auth/auth.service';
 import { Cart } from '../cart/cart.model';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-product',
@@ -15,6 +16,7 @@ import { Cart } from '../cart/cart.model';
 export class ProductComponent implements OnInit, OnDestroy {
   productForm: any;
   productList: Product[] = [];
+  cartList: Product[] = [];
   cart: Cart;
   productListSub: Subscription;
   newProductToggle: boolean = false;
@@ -49,6 +51,7 @@ export class ProductComponent implements OnInit, OnDestroy {
         for (let i = 0; i < res.length; i++) {
           if (res[i].userEmail === this.authService.userDataToBeShared.email) {
             this.checkEmail = true;
+            this.cartList = res[i].cartProducts;
             break;
           }
         }
@@ -61,14 +64,39 @@ export class ProductComponent implements OnInit, OnDestroy {
           this.cartService.addCart(res);
         }
       });
-      if (true) {
-      }
     }
     setTimeout(() => {
       this.productListSub = this.productService
         .getProductList()
         .subscribe((res: Product[]) => {
           this.productList = res.slice();
+          if (this.cartList != undefined) {
+            for (let i = 0; i < this.cartList.length; i++) {
+              const index = this.productList.findIndex(
+                (e) => e.productName === this.cartList[i].productName
+              );
+              // if (this.productList[i].productQuantity == 0) {
+              //   this.productList.splice(i, 1);
+              // }
+
+              if (index === -1) {
+                // this.productList.push(this.cartList[i]);
+                continue;
+              } else {
+                this.productList[index].productPurchased =
+                  this.cartList[i].productPurchased;
+                // this.productList[index].productQuantity =
+                //   this.productList[index].productQuantity -
+                //   this.cartList[i].productPurchased;
+              }
+            }
+          }
+
+          // for (let i = 0; i < this.productList.length; i++) {
+          //   if (this.productList[i].productPurchased != 0) {
+          //     this.productList[i].productPurchased = 0;
+          //   }
+          // }
         });
       this.contentLoaded = true;
     }, 1200);
@@ -117,9 +145,25 @@ export class ProductComponent implements OnInit, OnDestroy {
   }
 
   onAddToCart(index: number) {
-    if (this.productList[index].productPurchased == 1) return;
+    if (this.productList[index].productPurchased >= 1) return;
     this.productList[index].productQuantity--;
     this.productList[index].productPurchased++;
+  }
+
+  onSaveCart() {
+    if (this.authService.isAuthenticated) {
+      this.productService.updateProductList(this.productList);
+      Swal.fire({
+        position: 'bottom-right',
+        title: 'Cart Saved!',
+        text: 'The item(s) have been added to the cart.',
+        icon: 'success',
+        showConfirmButton: false,
+        toast: true,
+        timer: 1800,
+        timerProgressBar: true,
+      });
+    }
   }
 
   // onHandlePurchase(index: number, purchased: number) {
@@ -209,9 +253,6 @@ export class ProductComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.authService.isAuthenticated) {
-      this.productService.updateProductList(this.productList);
-    }
     this.productListSub.unsubscribe();
   }
 }

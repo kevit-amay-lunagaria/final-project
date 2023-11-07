@@ -86,20 +86,6 @@
         <label for="productquantity" class="text-lg font-semibold">
           <span class="asterisk">*</span>
           Quantity:
-          <!-- <span
-            class="reactive-span"
-            *ngIf="
-              !productForm.get('productQuantity').valid &&
-              productForm.get('productQuantity').touched
-            "
-          >
-            <span
-              class="reactive-span"
-              *ngIf="productForm.get('productQuantity').errors['required']"
-            >
-              This field is required!
-            </span>
-          </span> -->
         </label>
         <input
           class="px-3 m-1 mx-3 w-[60%] text-md product-input text-center"
@@ -115,20 +101,6 @@
         <label for="productprice" class="text-lg font-semibold">
           <span class="asterisk">*</span>
           Price:
-          <!-- <span
-            class="reactive-span"
-            *ngIf="
-              !productForm.get('productPrice').valid &&
-              productForm.get('productPrice').touched
-            "
-          >
-            <span
-              class="reactive-span"
-              *ngIf="productForm.get('productPrice').errors['required']"
-            >
-              This field is required!
-            </span>
-          </span> -->
         </label>
         &#x20b9;
         <input
@@ -173,10 +145,10 @@
     Add new product
   </button>
   <button
-    routerLink="/cart"
+    (click)="onSaveCart()"
     class="p-2 px-5 ml-auto font-medium text-white rounded-lg bg-[#3f73af] hover:bg-[#274f79] hover:font-semibold"
   >
-    Go to Cart
+    Save Cart
   </button>
 </div>
 
@@ -199,7 +171,7 @@
       <mat-card-header>
         <img
           mat-card-md-image
-          class="flex-col object-cover rounded-md"
+          class="flex-col object-cover mb-4 rounded-md"
           [src]="product.productImage"
         />
         <mat-card-title-group class="flex-col pl-4">
@@ -216,7 +188,42 @@
               ({{ product.productQuantity }})
             </span>
           </mat-card-subtitle>
-          <div class="flex flex-row items-center justify-between align-middle" *ngIf="isSeller">
+          <div class="flex flex-row justify-center" *ngIf="!isSeller">
+            <div
+              class="flex flex-row items-center justify-center my-4 align-middle"
+            >
+              <button
+                class="flex rounded-sm ring-1 active:shadow-[0_0_4px_0_rgba(0,0,0,0.4)]"
+                (click)="onDecrement(i)"
+              >
+                <span class="material-symbols-outlined"> remove </span>
+              </button>
+
+              <!-- focus:border-b-[1px] focus:border-[#181818] focus:border-spacing-1 -->
+              <input
+                class="mx-3 text-center"
+                type="text"
+                size="4"
+                min="0"
+                readonly
+                [max]="product.productQuantity"
+                [(ngModel)]="product.productPurchased"
+                [value]="product.productPurchased"
+                maxlength="3"
+                onkeypress="return (event.charCode == 8 || event.charCode == 0) ? null : event.charCode >= 48 && event.charCode <= 57"
+              />
+              <button
+                class="flex rounded-sm ring-1 active:shadow-[0_0_4px_0_rgba(0,0,0,0.4)]"
+                (click)="onIncrement(i)"
+              >
+                <span class="material-symbols-outlined"> add </span>
+              </button>
+            </div>
+          </div>
+          <div
+            class="flex flex-row items-center justify-between align-middle"
+            *ngIf="isSeller"
+          >
             <button
               type="button"
               (click)="onEditProduct(i)"
@@ -234,48 +241,6 @@
           </div>
         </mat-card-title-group>
       </mat-card-header>
-      <div class="flex flex-row justify-between">
-        <div
-          class="flex flex-row items-center justify-center w-1/2 align-middle"
-        >
-          <button
-            class="flex rounded-sm ring-1 active:shadow-[0_0_4px_0_rgba(0,0,0,0.4)]"
-            (click)="onDecrement(i)"
-          >
-            <span class="material-symbols-outlined"> remove </span>
-          </button>
-
-          <!-- focus:border-b-[1px] focus:border-[#181818] focus:border-spacing-1 -->
-          <input
-            class="mx-3 text-center"
-            type="text"
-            size="4"
-            min="0"
-            readonly
-            [max]="product.productQuantity"
-            [(ngModel)]="product.productPurchased"
-            [value]="product.productPurchased"
-            maxlength="3"
-            onkeypress="return (event.charCode == 8 || event.charCode == 0) ? null : event.charCode >= 48 && event.charCode <= 57"
-          />
-          <button
-            class="flex rounded-sm ring-1 active:shadow-[0_0_4px_0_rgba(0,0,0,0.4)]"
-            (click)="onIncrement(i)"
-          >
-            <span class="material-symbols-outlined"> add </span>
-          </button>
-        </div>
-        <div class="flex flex-col w-1/2">
-          <button
-            (click)="onAddToCart(i)"
-            class="rounded-sm mx-auto p-1 px-3 my-4 bg-[#bfcfee] hover:rounded-lg active:bg-blue-500 active:text-white active:font-semibold"
-          >
-            <span class="p-2">
-              {{ product.productPurchased ? "Added" : "Add to cart" }}
-            </span>
-          </button>
-        </div>
-      </div>
     </mat-card>
     <!-- PRODUCT CARD ENDS HERE -->
   </div>

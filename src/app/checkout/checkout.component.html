@@ -11,7 +11,7 @@
         <th>Price Per Piece</th>
         <th>Total</th>
       </tr>
-      <tr *ngFor="let product of cartList; index as i">
+      <tr *ngFor="let product of cart2List; index as i">
         <td>{{ i + 1 }}</td>
         <td>{{ product.productName }}</td>
         <td>{{ product.productPurchased }}</td>
@@ -30,6 +30,14 @@
         </td>
       </tr>
     </table>
+  </div>
+  <div class="flex flex-col items-center">
+    <button
+      class="p-2 px-4 my-4 text-white bg-green-800 rounded-md"
+      (click)="onFinalize()"
+    >
+      Finalize
+    </button>
   </div>
 </div>
 

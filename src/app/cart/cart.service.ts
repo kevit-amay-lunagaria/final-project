@@ -17,7 +17,7 @@ export class CartService {
   constructor(private http: HttpClient, private authService: AuthService) {}
 
   getAddedProducts(products: Product[]) {
-    return this.showCartProducts().subscribe((res: Cart[]) => {
+    this.getCarts().subscribe((res: Cart[]) => {
       this.cart = res;
       for (let i = 0; i < this.cart.length; i++) {
         if (
@@ -33,10 +33,6 @@ export class CartService {
         }
       }
     });
-  }
-
-  showCartProducts() {
-    return this.http.get<Cart[]>(this.urlCart);
   }
 
   getCarts() {

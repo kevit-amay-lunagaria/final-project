@@ -5,6 +5,7 @@ import { CartService } from './cart.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-cart',
@@ -31,7 +32,7 @@ export class CartComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.cartService.showCartProducts().subscribe((res) => {
+    this.cartService.getCarts().subscribe((res) => {
       for (let i = 0; i < res.length; i++) {
         if (res[i].userEmail == this.authService.userDataToBeShared.email) {
           this.cartList = res[i].cartProducts;
@@ -52,27 +53,30 @@ export class CartComponent implements OnInit, OnDestroy {
 
           if (this.cartList === undefined) {
             this.cartList = [];
-          }
+          } else {
+            for (let i = 0; i < this.cartList.length; i++) {
+              const index = this.productList.findIndex(
+                (e) => e.productName === this.cartList[i].productName
+              );
 
-          for (let i = 0; i < this.cartList.length; i++) {
-            const index = this.productList.findIndex(
-              (e) => e.productName === this.cartList[i].productName
-            );
-
-            console.log(index);
-
-            if (index === -1) {
-              if (this.cartList[i].productPurchased != 0) {
-                this.productList.push(this.cartList[i]);
+              if (index === -1) {
+                if (this.cartList[i].productPurchased != 0) {
+                  this.productList.push(this.cartList[i]);
+                }
+              } else {
+                if (this.productList[index].productPurchased != 0) {
+                  if (
+                    this.productList[index].productPurchased !=
+                    this.cartList[i].productPurchased
+                  ) {
+                    this.productList[index] = this.cartList[i];
+                  }
+                }
+                // this.cartList[index].productQuantity =
+                //   this.productList[index].productQuantity;
+                // this.cartList[index].productQuantity =
+                //   this.productList[index].productQuantity;
               }
-            } else {
-              // this.productList[index].productPurchased =
-              //   this.productList[index].productPurchased +
-              //   this.cartList[index].productPurchased;
-              // this.cartList[index].productQuantity =
-              //   this.productList[index].productQuantity;
-              // this.cartList[index].productQuantity =
-              //   this.productList[index].productQuantity;
             }
           }
 
@@ -91,12 +95,9 @@ export class CartComponent implements OnInit, OnDestroy {
           } else {
             this.isProductListEmpty = false;
           }
-          console.log(...this.cartList);
-          console.log(...this.productList);
-          console.log(...this.changedProductList);
           this.cartList = this.productList;
         });
-    }, 3000);
+    }, 2000);
   }
 
   onIncrement(index: number) {
@@ -149,36 +150,52 @@ export class CartComponent implements OnInit, OnDestroy {
       this.productList[index].productPurchased;
   }
 
+  onSaveCart() {
+    if (this.isProductListEmpty) {
+      console.log('hello');
+      this.cartService.getAddedProducts(this.cartList);
+      return;
+    }
+
+    if (this.cartList.length) {
+      for (let i = 0; i < this.cartList.length; i++) {
+        const index = this.changedProductList.findIndex(
+          (e) => e.productName === this.cartList[i].productName
+        );
+
+        if (index === -1) {
+          this.changedProductList.push(this.cartList[i]);
+        } else {
+          this.changedProductList[index] = this.cartList[i];
+        }
+      }
+    } else {
+      console.log('called here');
+      this.cartService.getAddedProducts([]);
+      for (let i = 0; i < this.changedProductList.length; i++) {
+        this.changedProductList[i].productPurchased = 0;
+      }
+    }
+
+    this.cartService.getAddedProducts(this.cartList);
+    this.productService.updateProductList(this.changedProductList);
+
+    Swal.fire({
+      title: 'Cart Saved!',
+      text: 'Your cart has been saved!',
+      icon: 'success',
+      position: 'bottom-right',
+      showConfirmButton: false,
+      toast: true,
+      timer: 1800,
+      timerProgressBar: true,
+    });
+  }
+
   ngOnDestroy(): void {
     if (this.isProductListEmpty) {
       return;
     }
-    
-    console.log(...this.cartList);
-    console.log(...this.productList);
-    // this.cartService.getAddedProducts([]);
-    this.cartService.getAddedProducts(this.cartList);
-
-    // for (let i = 0; i < this.changedProductList.length; i++) {
-    //   if (this.changedProductList[i].productPurchased != 0) {
-    //     this.changedProductList[i].productPurchased = 0;
-    //   }
-    // }
-
-    for (let i = 0; i < this.cartList.length; i++) {
-      const index = this.changedProductList.findIndex(
-        (e) => e.productName === this.cartList[i].productName
-      );
-
-      if (index === -1) {
-        continue;
-      } else {
-        this.changedProductList[index] = this.cartList[index];
-      }
-    }
-
-    this.productService.updateProductList(this.changedProductList);
-    console.log(...this.changedProductList);
 
     this.productListSub.unsubscribe();
   }
