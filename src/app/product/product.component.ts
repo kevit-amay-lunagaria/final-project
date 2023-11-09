@@ -26,7 +26,6 @@ export class ProductComponent implements OnInit, OnDestroy {
   isEditMode: boolean = false;
   isSeller: boolean = false;
   checkEmail: boolean = false;
-  isSubmitted: boolean = false;
   disableSaveCart: boolean = true;
   updatedProductIndex: number = -1;
   purchase: number = 0;
@@ -248,7 +247,6 @@ export class ProductComponent implements OnInit, OnDestroy {
       });
       this.productList.push(this.productForm.value);
     } else {
-      console.log(this.productForm.value);
       this.productList.splice(
         this.updatedProductIndex,
         1,
@@ -256,7 +254,6 @@ export class ProductComponent implements OnInit, OnDestroy {
       );
       this.isEditMode = !this.isEditMode;
     }
-    this.isSubmitted = true;
     this.productService.updateProductList(this.productList);
     this.newProductToggle = !this.newProductToggle;
     this.productForm.reset();
