@@ -5,12 +5,12 @@
   >
     Go back to store
   </button>
-  <button
+  <!-- <button
     (click)="onSaveCart()"
     class="p-2 px-5 ml-auto font-medium text-white rounded-lg bg-[#3f73af] hover:bg-[#274f79] hover:font-semibold"
   >
     Save Cart
-  </button>
+  </button> -->
 </div>
 
 <div *ngIf="!contentLoaded" class="flex flex-row mx-auto mt-5 lds-ripple">
@@ -47,8 +47,8 @@
             <span class="float-left text-sm">
               {{ product.productPrice | currency : "INR" : "symbol-narrow" }}
             </span>
-            <span class="float-right text-sm">
-              ({{ product.productQuantity }})
+            <span *ngIf="isSeller" class="float-right text-sm">
+              Available: {{ product.productQuantity }}
             </span>
           </mat-card-subtitle>
           <div class="flex flex-row justify-center">

@@ -16,7 +16,7 @@
             >
           </a>
         </li>
-        <li routerLinkActive="active">
+        <li *ngIf="isAuthenticated" routerLinkActive="active">
           <a
             routerLink="/cart"
             class="py-4 px-2 font-semibold active:text-[#dbe2ef]"

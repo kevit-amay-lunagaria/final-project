@@ -7,6 +7,7 @@ import { CartService } from '../cart/cart.service';
 import { AuthService } from '../auth/auth.service';
 import { Cart } from '../cart/cart.model';
 import Swal from 'sweetalert2';
+import { NavigationStart, Router } from '@angular/router';
 
 @Component({
   selector: 'app-product',
@@ -15,15 +16,18 @@ import Swal from 'sweetalert2';
 })
 export class ProductComponent implements OnInit, OnDestroy {
   productForm: any;
+  cart: Cart;
   productList: Product[] = [];
   cartList: Product[] = [];
-  cart: Cart;
   productListSub: Subscription;
   newProductToggle: boolean = false;
   contentLoaded: boolean = false;
+  itemsAdded: boolean = false;
   isEditMode: boolean = false;
   isSeller: boolean = false;
   checkEmail: boolean = false;
+  isSubmitted: boolean = false;
+  disableSaveCart: boolean = true;
   updatedProductIndex: number = -1;
   purchase: number = 0;
   product: Product = {
@@ -37,8 +41,33 @@ export class ProductComponent implements OnInit, OnDestroy {
   constructor(
     private productService: ProductService,
     private cartService: CartService,
-    private authService: AuthService
-  ) {}
+    private authService: AuthService,
+    private router: Router
+  ) {
+    router.events.forEach((event) => {
+      if (event instanceof NavigationStart) {
+        if (!this.itemsAdded && this.cartList === undefined) {
+          this.itemsAdded = !this.itemsAdded;
+          this.router.navigate(['/products']);
+          Swal.fire({
+            title: 'Item(s) might not be added to your cart!!',
+            icon: 'warning',
+            showDenyButton: true,
+            confirmButtonText: 'Its Okay',
+            denyButtonText: `Save cart`,
+          }).then((result) => {
+            if (result.isConfirmed) {
+              Swal.fire('The items were not added.', '', 'error');
+              router.navigate([event.url]);
+            } else if (result.isDenied) {
+              this.itemsAdded = !this.itemsAdded;
+              Swal.fire('Save your item(s) first!', '', 'info');
+            }
+          });
+        }
+      }
+    });
+  }
 
   ngOnInit(): void {
     if (this.authService.isAuthenticated) {
@@ -71,32 +100,24 @@ export class ProductComponent implements OnInit, OnDestroy {
         .subscribe((res: Product[]) => {
           this.productList = res.slice();
           if (this.cartList != undefined) {
+            this.disableSaveCart = false;
             for (let i = 0; i < this.cartList.length; i++) {
               const index = this.productList.findIndex(
                 (e) => e.productName === this.cartList[i].productName
               );
-              // if (this.productList[i].productQuantity == 0) {
-              //   this.productList.splice(i, 1);
-              // }
 
               if (index === -1) {
-                // this.productList.push(this.cartList[i]);
                 continue;
               } else {
                 this.productList[index].productPurchased =
                   this.cartList[i].productPurchased;
-                // this.productList[index].productQuantity =
-                //   this.productList[index].productQuantity -
-                //   this.cartList[i].productPurchased;
               }
             }
+          } else {
+            for (let i = 0; i < this.productList.length; i++) {
+              this.productList[i].productPurchased = 0;
+            }
           }
-
-          // for (let i = 0; i < this.productList.length; i++) {
-          //   if (this.productList[i].productPurchased != 0) {
-          //     this.productList[i].productPurchased = 0;
-          //   }
-          // }
         });
       this.contentLoaded = true;
     }, 1200);
@@ -144,40 +165,46 @@ export class ProductComponent implements OnInit, OnDestroy {
     this.productList[index].productPurchased--;
   }
 
-  onAddToCart(index: number) {
-    if (this.productList[index].productPurchased >= 1) return;
-    this.productList[index].productQuantity--;
-    this.productList[index].productPurchased++;
-  }
-
   onSaveCart() {
     if (this.authService.isAuthenticated) {
-      this.productService.updateProductList(this.productList);
-      Swal.fire({
-        position: 'bottom-right',
-        title: 'Cart Saved!',
-        text: 'The item(s) have been added to the cart.',
-        icon: 'success',
-        showConfirmButton: false,
-        toast: true,
-        timer: 1800,
-        timerProgressBar: true,
-      });
+      let zeroItems = true;
+      for (let i = 0; i < this.productList.length; i++) {
+        if (this.productList[i].productPurchased != 0) {
+          zeroItems = false;
+          break;
+        }
+      }
+      if (!zeroItems) {
+        this.itemsAdded = true;
+        setTimeout(() => {
+          this.cartService.getAddedProducts(this.productList);
+        }, 200);
+        this.productService.updateProductList(this.productList);
+        Swal.fire({
+          position: 'bottom-right',
+          title: 'Cart Saved!',
+          text: 'The item(s) have been added to the cart.',
+          icon: 'success',
+          showConfirmButton: false,
+          toast: true,
+          timer: 1800,
+          timerProgressBar: true,
+        });
+        this.router.navigate(['/cart']);
+      } else {
+        Swal.fire({
+          position: 'bottom-right',
+          title: 'Cart not Saved!',
+          text: 'Please select products.',
+          icon: 'warning',
+          showConfirmButton: false,
+          toast: true,
+          timer: 1800,
+          timerProgressBar: true,
+        });
+      }
     }
   }
-
-  // onHandlePurchase(index: number, purchased: number) {
-  //   // (keydown.enter)="onHandlePurchase(i, product.productPurchased)"
-  //   if (purchased > this.productList[index].productQuantity) return;
-  //   this.productList[index].productQuantity -= purchased;
-  //   this.purchase += +purchased;
-  // }
-
-  // totalPurchase(index: number) {
-  //   // (blur)="totalPurchase(i)"
-  //   this.productList[index].productPurchased = this.purchase;
-  //   this.purchase = 0;
-  // }
 
   onAddNewProductToggle() {
     this.initForm(this.product);
@@ -222,6 +249,7 @@ export class ProductComponent implements OnInit, OnDestroy {
       );
       this.isEditMode = !this.isEditMode;
     }
+    this.isSubmitted = true;
     this.productService.updateProductList(this.productList);
     this.newProductToggle = !this.newProductToggle;
     this.productForm.reset();
@@ -253,6 +281,8 @@ export class ProductComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.productListSub.unsubscribe();
+    if (this.contentLoaded) {
+      this.productListSub.unsubscribe();
+    }
   }
 }

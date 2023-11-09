@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Product } from '../product/product.model';
 import { ProductService } from '../product/product.service';
 import { CartService } from './cart.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import Swal from 'sweetalert2';
@@ -18,6 +18,7 @@ export class CartComponent implements OnInit, OnDestroy {
   cartList: Product[] = [];
   isProductListEmpty: boolean = false;
   contentLoaded: boolean = false;
+  cartSaved: boolean = false;
   totalItems: number = 0;
   subTotal: number = 0;
   productListSub: Subscription;
@@ -29,7 +30,31 @@ export class CartComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private router: Router,
     private route: ActivatedRoute
-  ) {}
+  ) {
+    // router.events.forEach((event) => {
+    //   if (event instanceof NavigationStart) {
+    //     if (!this.cartSaved && this.cartList.length != 0) {
+    //       this.cartSaved = !this.cartSaved;
+    //       this.router.navigate(['/cart']);
+    //       Swal.fire({
+    //         title: 'You have not saved your cart!!',
+    //         icon: 'warning',
+    //         showDenyButton: true,
+    //         confirmButtonText: "That's alright",
+    //         denyButtonText: `My bad`,
+    //       }).then((result) => {
+    //         if (result.isConfirmed) {
+    //           Swal.fire('The cart was not saved.', '', 'error');
+    //           router.navigate([event.url]);
+    //         } else if (result.isDenied) {
+    //           this.cartSaved = !this.cartSaved;
+    //           Swal.fire('Save your cart first!', '', 'info');
+    //         }
+    //       });
+    //     }
+    //   }
+    // });
+  }
 
   ngOnInit(): void {
     this.cartService.getCarts().subscribe((res) => {
@@ -69,13 +94,10 @@ export class CartComponent implements OnInit, OnDestroy {
                     this.productList[index].productPurchased !=
                     this.cartList[i].productPurchased
                   ) {
-                    this.productList[index] = this.cartList[i];
+                    this.productList[index].productPurchased =
+                      this.cartList[i].productPurchased;
                   }
                 }
-                // this.cartList[index].productQuantity =
-                //   this.productList[index].productQuantity;
-                // this.cartList[index].productQuantity =
-                //   this.productList[index].productQuantity;
               }
             }
           }
@@ -111,6 +133,8 @@ export class CartComponent implements OnInit, OnDestroy {
     this.subTotal +=
       this.productList[index].productPrice *
       this.productList[index].productPurchased;
+    this.cartService.getAddedProducts(this.cartList);
+    console.log(this.cartList);
     return;
   }
 
@@ -133,8 +157,11 @@ export class CartComponent implements OnInit, OnDestroy {
       if (this.productList.length == 0) {
         this.isProductListEmpty = true;
       }
+
       return;
     }
+    console.log(this.cartList);
+    this.cartService.getAddedProducts(this.cartList);
 
     this.totalItems--;
 
@@ -151,8 +178,8 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   onSaveCart() {
+    this.cartSaved = true;
     if (this.isProductListEmpty) {
-      console.log('hello');
       this.cartService.getAddedProducts(this.cartList);
       return;
     }
@@ -170,7 +197,6 @@ export class CartComponent implements OnInit, OnDestroy {
         }
       }
     } else {
-      console.log('called here');
       this.cartService.getAddedProducts([]);
       for (let i = 0; i < this.changedProductList.length; i++) {
         this.changedProductList[i].productPurchased = 0;
@@ -197,6 +223,8 @@ export class CartComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.productListSub.unsubscribe();
+    if (this.contentLoaded) {
+      this.productListSub.unsubscribe();
+    }
   }
 }

@@ -4,6 +4,7 @@ import { User } from './user.model';
 import { BehaviorSubject, catchError, tap, throwError } from 'rxjs';
 import { AuthUser } from './authUser.model';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 export interface AuthResponseData {
   idToken: string;
@@ -23,6 +24,7 @@ export class AuthService {
   private tokenExpirationTimer: any;
   userRole: string = '';
   userDataToBeShared: AuthUser;
+  errorMessage: string = '';
 
   private urlSignUp: string =
     'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDVMLaQkLU8k3l_1Xn9rMMuK7S3gVunoHA';
@@ -52,12 +54,15 @@ export class AuthService {
       )
       .subscribe({
         next: (resData) => {
-          // console.log(resData);
           this.isAuthenticated = true;
           this.router.navigate(['/products']);
         },
         error: (error) => {
-          console.log(error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: error,
+          });
         },
       });
   }
@@ -83,12 +88,15 @@ export class AuthService {
       )
       .subscribe({
         next: (resData) => {
-          // console.log(resData);
           this.isAuthenticated = true;
           this.router.navigate(['/products']);
         },
         error: (error) => {
-          console.log(error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: error,
+          });
         },
       });
   }
@@ -153,7 +161,6 @@ export class AuthService {
     const expirationDate = new Date(new Date().getTime() + +expiresIn * 1000);
     const user = new AuthUser(email, userId, token, expirationDate);
     this.user.next(user);
-    // console.log(user);
     this.autoLogout(expiresIn * 1000);
     this.userDataToBeShared = user;
     localStorage.setItem('userData', JSON.stringify(user));
@@ -165,6 +172,7 @@ export class AuthService {
     if (!errorResponse.error || !errorResponse.error.error) {
       return throwError(() => errorMessage);
     }
+    console.log(errorResponse);
     switch (errorResponse.error.error.message) {
       case 'EMAIL_EXISTS':
         errorMessage = 'The email already exists!!';

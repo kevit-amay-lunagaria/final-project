@@ -21,6 +21,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   productListSub: Subscription;
   grandTotal: number = 0;
   contentLoaded: boolean = false;
+  cartNotFound: boolean = false;
 
   constructor(
     private cartService: CartService,
@@ -35,7 +36,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       .getProductList()
       .subscribe((res: Product[]) => {
         this.productList = res.slice();
-        console.log(this.productList);
       });
 
     setTimeout(() => {
@@ -46,22 +46,27 @@ export class CheckoutComponent implements OnInit, OnDestroy {
             if (
               res[i].userEmail === this.authService.userDataToBeShared.email
             ) {
-              for (let j = 0; j < res[i].cartProducts.length; j++) {
-                if (res[i].cartProducts[j].productPurchased != 0) {
-                  this.cartList.push(res[i].cartProducts[j]);
-                  this.grandTotal +=
-                    res[i].cartProducts[j].productPrice *
-                    res[i].cartProducts[j].productPurchased;
-                  console.log(res[i]);
+              if (res[i].cartProducts !== undefined) {
+                for (let j = 0; j < res[i].cartProducts.length; j++) {
+                  if (res[i].cartProducts[j].productPurchased != 0) {
+                    this.cartList.push(res[i].cartProducts[j]);
+                    this.grandTotal +=
+                      res[i].cartProducts[j].productPrice *
+                      res[i].cartProducts[j].productPurchased;
+                  }
                 }
+              } else {
+                this.cartNotFound = true;
+                break;
               }
               break;
             } else {
               continue;
             }
           }
-          this.cart2List.push(...this.cartList);
-          console.log(this.cart2List[0]);
+          if (!this.cartNotFound) {
+            this.cart2List.push(...this.cartList);
+          }
         });
       this.contentLoaded = true;
     }, 1000);
@@ -80,7 +85,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.productService.updateProductList(this.productList);
     setTimeout(() => {
       this.router.navigate(['/products'], { relativeTo: this.route });
-    }, 1000);
+    }, 1400);
 
     Swal.fire({
       icon: 'success',
@@ -91,7 +96,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.productListSub.unsubscribe();
-    this.cartListSub.unsubscribe();
+    if (this.contentLoaded) {
+      this.productListSub.unsubscribe();
+      this.cartListSub.unsubscribe();
+    }
   }
 }

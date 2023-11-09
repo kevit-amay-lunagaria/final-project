@@ -10,8 +10,6 @@ import { AuthService } from '../auth/auth.service';
 export class CartService {
   private urlCart =
     'https://product-shop-5610d-default-rtdb.asia-southeast1.firebasedatabase.app/carts.json';
-  private urlProduct =
-    'https://product-shop-5610d-default-rtdb.asia-southeast1.firebasedatabase.app/products.json';
   private cart: Cart[];
 
   constructor(private http: HttpClient, private authService: AuthService) {}
@@ -23,9 +21,6 @@ export class CartService {
         if (
           this.cart[i].userEmail == this.authService.userDataToBeShared.email
         ) {
-          // if (this.cart[i].cartProducts === undefined) {
-          //   this.cart[i].cartProducts = [];
-          // }
           this.cart[i].cartProducts = [];
           this.cart[i].cartProducts.push(...products);
           this.addCart(this.cart);
