@@ -49,6 +49,14 @@
         autocomplete="off"
         minlength="8"
       />
+      <span
+        class="text-red-600"
+        *ngIf="
+          !userForm.get('userPassword').valid &&
+          !userForm.get('userPassword').untouched
+        "
+        >Minimum 8 characters</span
+      >
       <div
         class="flex self-center justify-center sm:w-[63%] mt-6 mb-8 md:w-1/2"
         id="radio-button-toggle"
@@ -73,6 +81,7 @@
         />
         <label for="seller" class="radio-label">Seller</label>
       </div>
+
       <button
         style="outline: none"
         class="w-40 p-2 mx-auto mt-auto font-semibold text-white bg-blue-600 rounded-lg md:w-40 hover:ring-2 hover:ring-blue-600 hover:bg-white hover:text-black focus:ring-2 focus:ring-blue-600 focus:bg-white focus:text-black"

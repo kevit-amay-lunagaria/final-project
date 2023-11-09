@@ -65,11 +65,8 @@ export class ProductComponent implements OnInit, OnDestroy {
               router.navigate([event.url]);
             } else if (result.isDenied) {
               this.itemsAdded = !this.itemsAdded;
-              Swal.fire(
-                'Save your item(s) first by clicking on "Add to cart"!',
-                '',
-                'info'
-              );
+              Swal.fire('The item(s) were saved!', '', 'info');
+              this.onSaveCart();
             }
           });
         }
