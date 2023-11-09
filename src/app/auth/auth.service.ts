@@ -5,6 +5,7 @@ import { BehaviorSubject, catchError, tap, throwError } from 'rxjs';
 import { AuthUser } from './authUser.model';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { environment } from 'src/environments/environment.prod';
 
 export interface AuthResponseData {
   idToken: string;
@@ -27,9 +28,11 @@ export class AuthService {
   errorMessage: string = '';
 
   private urlSignUp: string =
-    'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDVMLaQkLU8k3l_1Xn9rMMuK7S3gVunoHA';
+    'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' +
+    environment.fireBaseAPIKey;
   private urlLogIn: string =
-    'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDVMLaQkLU8k3l_1Xn9rMMuK7S3gVunoHA';
+    'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' +
+    environment.fireBaseAPIKey;
 
   constructor(private http: HttpClient, private router: Router) {}
 
