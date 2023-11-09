@@ -46,7 +46,11 @@ export class ProductComponent implements OnInit, OnDestroy {
   ) {
     router.events.forEach((event) => {
       if (event instanceof NavigationStart) {
-        if (!this.itemsAdded && this.cartList === undefined) {
+        if (
+          !this.itemsAdded &&
+          this.cartList !== undefined &&
+          event.url != '/auth'
+        ) {
           this.itemsAdded = !this.itemsAdded;
           this.router.navigate(['/products']);
           Swal.fire({
@@ -61,7 +65,11 @@ export class ProductComponent implements OnInit, OnDestroy {
               router.navigate([event.url]);
             } else if (result.isDenied) {
               this.itemsAdded = !this.itemsAdded;
-              Swal.fire('Save your item(s) first!', '', 'info');
+              Swal.fire(
+                'Save your item(s) first by clicking on "Add to cart"!',
+                '',
+                'info'
+              );
             }
           });
         }
@@ -167,17 +175,18 @@ export class ProductComponent implements OnInit, OnDestroy {
 
   onSaveCart() {
     if (this.authService.isAuthenticated) {
+      this.cartList = [];
       let zeroItems = true;
       for (let i = 0; i < this.productList.length; i++) {
         if (this.productList[i].productPurchased != 0) {
           zeroItems = false;
-          break;
+          this.cartList.push(this.productList[i]);
         }
       }
       if (!zeroItems) {
         this.itemsAdded = true;
         setTimeout(() => {
-          this.cartService.getAddedProducts(this.productList);
+          this.cartService.getAddedProducts(this.cartList);
         }, 200);
         this.productService.updateProductList(this.productList);
         Swal.fire({
@@ -192,6 +201,7 @@ export class ProductComponent implements OnInit, OnDestroy {
         });
         this.router.navigate(['/cart']);
       } else {
+        this.cartService.getAddedProducts(this.cartList);
         Swal.fire({
           position: 'bottom-right',
           title: 'Cart not Saved!',

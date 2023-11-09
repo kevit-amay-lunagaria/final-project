@@ -108,7 +108,7 @@
           type="number"
           max="999"
           min="10"
-          placeholder="E.g. &#x20b9;50"
+          placeholder="E.g. &#x20b9;50  (10 to 999)"
           formControlName="productPrice"
           onkeypress="return (event.charCode == 8 || event.charCode == 0) ? null : event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46"
         />
@@ -241,6 +241,38 @@
           </div>
         </mat-card-title-group>
       </mat-card-header>
+      <div class="flex flex-row justify-center" *ngIf="isSeller">
+        <div
+          class="flex flex-row items-center justify-center my-4 align-middle"
+        >
+          <button
+            class="flex rounded-sm ring-1 active:shadow-[0_0_4px_0_rgba(0,0,0,0.4)]"
+            (click)="onDecrement(i)"
+          >
+            <span class="material-symbols-outlined"> remove </span>
+          </button>
+
+          <!-- focus:border-b-[1px] focus:border-[#181818] focus:border-spacing-1 -->
+          <input
+            class="mx-3 text-center"
+            type="text"
+            size="4"
+            min="0"
+            readonly
+            [max]="product.productQuantity"
+            [(ngModel)]="product.productPurchased"
+            [value]="product.productPurchased"
+            maxlength="3"
+            onkeypress="return (event.charCode == 8 || event.charCode == 0) ? null : event.charCode >= 48 && event.charCode <= 57"
+          />
+          <button
+            class="flex rounded-sm ring-1 active:shadow-[0_0_4px_0_rgba(0,0,0,0.4)]"
+            (click)="onIncrement(i)"
+          >
+            <span class="material-symbols-outlined"> add </span>
+          </button>
+        </div>
+      </div>
     </mat-card>
     <!-- PRODUCT CARD ENDS HERE -->
   </div>
