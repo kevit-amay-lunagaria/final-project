@@ -53,7 +53,7 @@
         class="text-red-600"
         *ngIf="
           !userForm.get('userPassword').valid &&
-          !userForm.get('userPassword').untouched
+          userForm.get('userPassword').dirty
         "
         >Minimum 8 characters</span
       >

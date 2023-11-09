@@ -108,7 +108,7 @@
           type="number"
           max="99999"
           min="10"
-          placeholder="E.g. &#x20b9;50  (10 to 999)"
+          placeholder="E.g. &#x20b9;50  (10 to 99999)"
           formControlName="productPrice"
           onkeypress="return (event.charCode == 8 || event.charCode == 0) ? null : event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46"
         />
@@ -188,7 +188,7 @@
               Available: {{ product.productQuantity }}
             </span>
           </mat-card-subtitle>
-          <div class="flex flex-row justify-center" *ngIf="!isSeller">
+          <div class="flex flex-row justify-center mt-auto" *ngIf="!isSeller">
             <div
               class="flex flex-row items-center justify-center my-4 align-middle"
             >
@@ -241,7 +241,10 @@
           </div>
         </mat-card-title-group>
       </mat-card-header>
-      <div class="flex flex-row justify-center" *ngIf="isSeller">
+
+      <!--  FOR SELLER -->
+
+      <div class="flex flex-row justify-center mt-auto" *ngIf="isSeller">
         <div
           class="flex flex-row items-center justify-center my-4 align-middle"
         >
