@@ -30,6 +30,22 @@ export class CartService {
     });
   }
 
+  sellerAddedProducts(products: Product[]) {
+    this.getCarts().subscribe((res: Cart[]) => {
+      this.cart = res;
+      for (let i = 0; i < this.cart.length; i++) {
+        if (
+          this.cart[i].userEmail == this.authService.userDataToBeShared.email
+        ) {
+          this.cart[i].myProducts = [];
+          this.cart[i].myProducts.push(...products);
+          this.addCart(this.cart);
+          return;
+        }
+      }
+    });
+  }
+
   getCarts() {
     return this.http.get<Cart[]>(this.urlCart);
   }

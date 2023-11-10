@@ -1,149 +1,6 @@
-<!-- PRODUCT FORM STARTS HERE -->
-
-<div class="new-product-backdrop" *ngIf="newProductToggle && isSeller"></div>
-<div
-  class="w-1/2 p-8 rounded-lg new-product-form"
-  *ngIf="newProductToggle && isSeller"
->
-  <h1 class="text-3xl font-semibold text-center text-[#3f72af]">Add Product</h1>
-
-  <form
-    action=""
-    [formGroup]="productForm"
-    (ngSubmit)="onSubmit()"
-    class="mt-7"
-  >
-    <label for="productname" class="block text-lg font-semibold">
-      <span class="asterisk">*</span>
-      Name:
-      <span
-        class="float-right reactive-span"
-        *ngIf="
-          !productForm.get('productName').valid &&
-          productForm.get('productName').touched
-        "
-      >
-        <span
-          class="reactive-span"
-          *ngIf="productForm.get('productName').errors['required']"
-        >
-          This field is required!
-        </span>
-      </span>
-    </label>
-    <input
-      class="block w-[95%] m-1 mb-8 mx-3 px-3 text-md product-input"
-      type="text"
-      placeholder="E.g. New Product"
-      formControlName="productName"
-    />
-    <label for="productimage" class="block text-lg font-semibold">
-      <span class="asterisk">*</span>
-      Image URL:
-      <span
-        class="float-right reactive-span"
-        *ngIf="
-          !productForm.get('productImage').valid &&
-          productForm.get('productImage').touched
-        "
-      >
-        <span
-          class="reactive-span"
-          *ngIf="productForm.get('productImage').errors['required']"
-        >
-          This field is required!
-        </span>
-        <span
-          class="reactive-span"
-          *ngIf="productForm.get('productImage').errors['notProperImageFormat']"
-        >
-          Not in proper format!
-        </span>
-      </span>
-    </label>
-    <input
-      class="block w-[95%] m-1 mb-8 mx-3 px-3 text-md product-input"
-      type="text"
-      #imageURL
-      placeholder="Product image link goes here..."
-      formControlName="productImage"
-    />
-    <div
-      class="flex justify-center py-2 border-2 border-dashed row"
-      *ngIf="
-        !productForm.get('productImage').errors?.notProperImageFormat &&
-        imageURL.value
-      "
-    >
-      <img [src]="imageURL.value" class="object-cover rounded-md h-60" alt="" />
-    </div>
-    <div
-      class="flex flex-col items-center justify-between my-8 space-y-4 xl:space-y-0 xl:flex-row"
-    >
-      <div
-        class="flex flex-row items-center justify-around w-full my-2 xl:mt-0"
-      >
-        <label for="productquantity" class="text-lg font-semibold">
-          <span class="asterisk">*</span>
-          Quantity:
-        </label>
-        <input
-          class="px-3 m-1 mx-3 w-[60%] text-md product-input text-center"
-          type="number"
-          max="1000"
-          min="1"
-          placeholder="E.g. 10"
-          formControlName="productQuantity"
-          onkeypress="return (event.charCode == 8 || event.charCode == 0) ? null : event.charCode >= 48 && event.charCode <= 57"
-        />
-      </div>
-      <div class="flex flex-row items-center justify-around w-full">
-        <label for="productprice" class="text-lg font-semibold">
-          <span class="asterisk">*</span>
-          Price:
-        </label>
-        &#x20b9;
-        <input
-          class="px-3 m-1 w-[60%] mx-3 text-md product-input text-center"
-          type="number"
-          max="99999"
-          min="10"
-          placeholder="E.g. &#x20b9;50  (10 to 99999)"
-          formControlName="productPrice"
-          onkeypress="return (event.charCode == 8 || event.charCode == 0) ? null : event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46"
-        />
-      </div>
-    </div>
-    <div class="flex flex-row justify-center space-x-4">
-      <button
-        type="submit"
-        class="p-2 px-8 font-semibold text-white bg-blue-700 rounded-md hover:ring-2 hover:ring-blue-600 hover:bg-blue-200 hover:text-black focus:ring-2 focus:ring-blue-600 focus:bg-white focus:text-black"
-      >
-        {{ isEditMode ? "Update" : "Add" }}
-      </button>
-      <button
-        type="button"
-        class="p-2 px-8 font-semibold text-white bg-red-700 rounded-md hover:ring-2 hover:ring-red-600 hover:bg-red-200 hover:text-black focus:ring-2 focus:ring-red-600 focus:bg-white focus:text-black"
-        (click)="onCancel()"
-      >
-        Cancel
-      </button>
-    </div>
-  </form>
-</div>
-
-<!-- PRODUCT FORM ENDS HERE -->
-
-<!-- ADD PRODUCT AND LOADER STARTS HERE -->
+<!-- ADD PRODUCTS AND LOADER STARTS HERE -->
 
 <div class="flex flex-row justify-between h-10 px-4">
-  <button
-    *ngIf="isSeller"
-    (click)="onAddNewProductToggle()"
-    class="p-2 px-5 font-medium text-white bg-green-600 rounded-lg hover:bg-green-800 hover:font-semibold"
-  >
-    Add new product
-  </button>
   <button
     (click)="onSaveCart()"
     class="p-2 px-5 ml-auto font-medium text-white rounded-lg bg-[#3f73af] hover:bg-[#274f79] hover:font-semibold"
@@ -157,7 +14,7 @@
   <div></div>
 </div>
 
-<!-- ADD PRODUCT AND LOADER ENDS HERE -->
+<!-- ADD PRODUCTS AND LOADER ENDS HERE -->
 
 <!-- PRODUCTS LIST START HERE -->
 
@@ -168,7 +25,7 @@
       class="m-4 w-[280px] product-card md:w-[300px] lg:w-[400px]"
       *ngFor="let product of productList; index as i"
     >
-      <mat-card-header>
+      <mat-card-header class="h-full">
         <img
           mat-card-md-image
           class="flex-col object-cover mb-4 rounded-md"
@@ -199,7 +56,6 @@
                 <span class="material-symbols-outlined"> remove </span>
               </button>
 
-              <!-- focus:border-b-[1px] focus:border-[#181818] focus:border-spacing-1 -->
               <input
                 class="mx-3 text-center"
                 type="text"
@@ -219,25 +75,6 @@
                 <span class="material-symbols-outlined"> add </span>
               </button>
             </div>
-          </div>
-          <div
-            class="flex flex-row items-center justify-between align-middle"
-            *ngIf="isSeller"
-          >
-            <button
-              type="button"
-              (click)="onEditProduct(i)"
-              class="px-2 py-1 text-blue-700 rounded-md hover:bg-blue-100"
-            >
-              <span class="text-xl material-symbols-outlined"> edit </span>
-            </button>
-            <button
-              type="button"
-              class="px-2 py-1 text-red-700 rounded-md hover:bg-red-100"
-              (click)="onDeleteProduct(i)"
-            >
-              <span class="text-xl material-symbols-outlined"> delete </span>
-            </button>
           </div>
         </mat-card-title-group>
       </mat-card-header>

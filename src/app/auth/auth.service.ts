@@ -23,6 +23,7 @@ export class AuthService {
   isAuthenticated: boolean = false;
   user = new BehaviorSubject<AuthUser>(null);
   private tokenExpirationTimer: any;
+  userFirstName: string = '';
   userRole: string = '';
   userDataToBeShared: AuthUser;
   errorMessage: string = '';
@@ -38,6 +39,7 @@ export class AuthService {
 
   onSignUp(user: User) {
     this.userRole = user.userRole;
+    this.userFirstName = user.userFirstName;
     return this.http
       .post<AuthResponseData>(this.urlSignUp, {
         email: user.userEmail,
@@ -58,7 +60,7 @@ export class AuthService {
       .subscribe({
         next: (resData) => {
           this.isAuthenticated = true;
-          this.router.navigate(['/products']);
+          this.router.navigate(['/myproducts']);
         },
         error: (error) => {
           Swal.fire({
@@ -92,7 +94,7 @@ export class AuthService {
       .subscribe({
         next: (resData) => {
           this.isAuthenticated = true;
-          this.router.navigate(['/products']);
+          this.router.navigate(['/myproducts']);
         },
         error: (error) => {
           Swal.fire({
@@ -115,6 +117,7 @@ export class AuthService {
       return;
     }
 
+    this.userFirstName = localStorage.getItem('userFname');
     this.userRole = localStorage.getItem('userRole');
     this.userDataToBeShared = JSON.parse(localStorage.getItem('userData'));
 
@@ -141,6 +144,7 @@ export class AuthService {
     this.router.navigate(['/auth']);
     localStorage.removeItem('userData');
     localStorage.removeItem('userRole');
+    localStorage.removeItem('userFname');
     if (this.tokenExpirationTimer) {
       clearTimeout(this.tokenExpirationTimer);
     }
@@ -168,6 +172,7 @@ export class AuthService {
     this.userDataToBeShared = user;
     localStorage.setItem('userData', JSON.stringify(user));
     localStorage.setItem('userRole', this.userRole);
+    localStorage.setItem('userFname', this.userFirstName);
   }
 
   private handleError = (errorResponse) => {

@@ -30,31 +30,7 @@ export class CartComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private router: Router,
     private route: ActivatedRoute
-  ) {
-    // router.events.forEach((event) => {
-    //   if (event instanceof NavigationStart) {
-    //     if (!this.cartSaved && this.cartList.length != 0) {
-    //       this.cartSaved = !this.cartSaved;
-    //       this.router.navigate(['/cart']);
-    //       Swal.fire({
-    //         title: 'You have not saved your cart!!',
-    //         icon: 'warning',
-    //         showDenyButton: true,
-    //         confirmButtonText: "That's alright",
-    //         denyButtonText: `My bad`,
-    //       }).then((result) => {
-    //         if (result.isConfirmed) {
-    //           Swal.fire('The cart was not saved.', '', 'error');
-    //           router.navigate([event.url]);
-    //         } else if (result.isDenied) {
-    //           this.cartSaved = !this.cartSaved;
-    //           Swal.fire('Save your cart first!', '', 'info');
-    //         }
-    //       });
-    //     }
-    //   }
-    // });
-  }
+  ) {}
 
   ngOnInit(): void {
     this.cartService.getCarts().subscribe((res) => {
@@ -157,6 +133,7 @@ export class CartComponent implements OnInit, OnDestroy {
       if (this.productList.length == 0) {
         this.isProductListEmpty = true;
       }
+      this.cartService.getAddedProducts(this.cartList);
 
       return;
     }

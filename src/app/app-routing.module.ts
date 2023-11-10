@@ -4,7 +4,7 @@ import { ErrorPageComponent } from './error-page/error-page.component';
 import { AuthGuard } from './auth/auth-guard';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/auth', pathMatch: 'full' },
+  { path: '', redirectTo: '/products', pathMatch: 'full' },
   {
     path: 'auth',
     loadChildren: () =>
@@ -14,6 +14,14 @@ const routes: Routes = [
     path: 'products',
     loadChildren: () =>
       import('./product/product.module').then((pdt) => pdt.ProductModule),
+  },
+  {
+    path: 'myproducts',
+    loadChildren: () =>
+      import('./myproducts/myproducts.module').then(
+        (mypdt) => mypdt.MyproductsModule
+      ),
+    canActivate: [AuthGuard],
   },
   {
     path: 'cart',
