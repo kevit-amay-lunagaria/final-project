@@ -68,9 +68,11 @@
             *ngIf="showAvatarOptions"
             class="absolute py-2 ml-[-130px] mt-[60px] space-y-2 bg-white border rounded-md border-slate-200"
           >
-            <li class="px-10 active:bg-[#3F73AF] hover:bg-slate-200">
+            <li
+              class="px-10 active:bg-[#3F73AF] active:text-white hover:bg-slate-200"
+            >
               <button>
-                <a routerLink="/auth" class="flex active:text-white">
+                <a routerLink="/auth" class="flex">
                   <span class="p-[5px]"
                     >{{ isAuthenticated ? "Logout" : "Login" }}
                   </span>
