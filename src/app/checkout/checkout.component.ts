@@ -73,13 +73,11 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   onFinalize() {
-    console.log(this.productList);
     for (let i = 0; i < this.productList.length; i++) {
       if (this.productList[i].productPurchased != 0) {
         this.productList[i].productPurchased = 0;
       }
     }
-    console.log(this.cartList);
     this.cartList.splice(0, this.cartList.length);
     this.cartService.getAddedProducts(this.cartList);
     this.productService.updateProductList(this.productList);

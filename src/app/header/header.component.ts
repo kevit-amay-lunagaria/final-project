@@ -11,6 +11,7 @@ export class HeaderComponent implements OnInit, DoCheck {
   isAuthenticated: boolean = false;
   isSeller: boolean = false;
   fname: string = '';
+  showAvatarOptions: boolean = false;
   constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {}
@@ -24,4 +25,8 @@ export class HeaderComponent implements OnInit, DoCheck {
     this.fname = localStorage.getItem('userFname');
     this.isAuthenticated = this.authService.isAuthenticated;
   }
+
+  // showOptions() {
+  //   this.showAvatarOptions = !this.showAvatarOptions;
+  // }
 }

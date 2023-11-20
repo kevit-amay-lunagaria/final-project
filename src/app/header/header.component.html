@@ -1,9 +1,9 @@
-<div class="px-2 py-3 mx-2">
+<div class="px-2 py-3 mx-2" (mouseleave)="showAvatarOptions = false">
   <div
     id="nav-div"
     class="p-3 rounded-lg shadow-[0_0_60px_0_rgba(0,0,0,0.4)] items-center"
   >
-    <nav class="text-[#3F73AF] text-">
+    <nav class="text-[#3F73AF]">
       <ul class="flex flex-row items-center text-xl">
         <li *ngIf="isAuthenticated && isSeller" routerLinkActive="active">
           <a
@@ -41,25 +41,46 @@
             </span>
           </a>
         </li>
-
-        <li class="ml-auto" routerLinkActive="active">
-          <a
-            routerLink="/auth"
-            class="font-semibold flex active:text-[#dbe2ef]"
-          >
-            <span
-              class="hover:bg-[#3F73AF] hover:text-[#dbe2ef] rounded-full p-[7px] material-symbols-outlined"
-            >
-              {{ isAuthenticated ? "logout" : "login" }}
-            </span>
-          </a>
-        </li>
-        <li *ngIf="isAuthenticated">
+        <li class="ml-auto" *ngIf="isAuthenticated">
           <a class="px-2 py-4 font-semibold">
             <span class="text-[#dbe2ef] rounded-full p-[7px]">
               {{ fname }}
             </span>
           </a>
+        </li>
+        <li
+          appDropDown
+          class="flex"
+          [ngClass]="{ 'ml-auto': !isAuthenticated }"
+        >
+          <button
+            (click)="showAvatarOptions = !showAvatarOptions"
+            (mouseover)="showAvatarOptions = true"
+          >
+            <img
+              class="w-10 mr-4 rounded-full hover:ring-4"
+              src="https://media.istockphoto.com/vectors/default-profile-picture-avatar-photo-placeholder-vector-illustration-vector-id1223671392?k=6&m=1223671392&s=170667a&w=0&h=zP3l7WJinOFaGb2i1F4g8IS2ylw0FlIaa6x3tP9sebU="
+              alt=""
+            />
+          </button>
+
+          <ul
+            *ngIf="showAvatarOptions"
+            class="absolute py-2 ml-[-130px] mt-[60px] space-y-2 bg-white border rounded-md border-slate-200"
+          >
+            <li class="px-10 active:bg-[#3F73AF] hover:bg-slate-200">
+              <button>
+                <a routerLink="/auth" class="flex active:text-white">
+                  <span class="p-[5px]"
+                    >{{ isAuthenticated ? "Logout" : "Login" }}
+                  </span>
+                  <span class="rounded-full p-[7px] material-symbols-outlined">
+                    {{ isAuthenticated ? "logout" : "login" }}
+                  </span>
+                </a>
+              </button>
+            </li>
+          </ul>
         </li>
       </ul>
     </nav>

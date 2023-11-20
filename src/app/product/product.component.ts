@@ -41,7 +41,6 @@ export class ProductComponent implements OnInit, OnDestroy {
             this.checkEmail = true;
             this.cartList = res[i].cartProducts;
             localStorage.setItem('userFname', res[i].userFirstName);
-            console.log(res[i]);
             break;
           }
         }

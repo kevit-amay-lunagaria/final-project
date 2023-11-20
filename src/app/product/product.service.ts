@@ -16,8 +16,6 @@ export class ProductService {
   }
 
   updateProductList(newProducts: Product[]) {
-    return this.http.put<Product>(this.url, newProducts).subscribe((res) => {
-      console.log(res);
-    });
+    return this.http.put<Product>(this.url, newProducts).subscribe((res) => {});
   }
 }

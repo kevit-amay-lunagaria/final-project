@@ -180,7 +180,6 @@ export class AuthService {
     if (!errorResponse.error || !errorResponse.error.error) {
       return throwError(() => errorMessage);
     }
-    console.log(errorResponse);
     switch (errorResponse.error.error.message) {
       case 'EMAIL_EXISTS':
         errorMessage = 'The email already exists!!';

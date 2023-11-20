@@ -110,7 +110,6 @@ export class CartComponent implements OnInit, OnDestroy {
       this.productList[index].productPrice *
       this.productList[index].productPurchased;
     this.cartService.getAddedProducts(this.cartList);
-    console.log(this.cartList);
     return;
   }
 
@@ -137,7 +136,6 @@ export class CartComponent implements OnInit, OnDestroy {
 
       return;
     }
-    console.log(this.cartList);
     this.cartService.getAddedProducts(this.cartList);
 
     this.totalItems--;

@@ -52,7 +52,6 @@ export class CartService {
 
   addCart(cart: Cart[]) {
     this.http.put<Cart[]>(this.urlCart, cart).subscribe((res: Cart[]) => {
-      console.log(res);
     });
   }
 }
