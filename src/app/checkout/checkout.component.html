@@ -13,7 +13,7 @@
       </tr>
       <tr *ngFor="let product of cart2List; index as i">
         <td>{{ i + 1 }}</td>
-        <td>{{ product.productName }}</td>
+        <td class="break-words w-[350px]">{{ product.productName }}</td>
         <td>{{ product.productPurchased }}</td>
         <td>{{ product.productPrice | currency : "INR" : "symbol-narrow" }}</td>
         <td>
