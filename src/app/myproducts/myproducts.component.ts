@@ -15,7 +15,6 @@ import { Router } from '@angular/router';
 })
 export class MyproductsComponent implements OnInit, OnDestroy {
   productForm: any;
-  cart: Cart;
   productsList: Product[] = [];
   myProductsList: Product[] = [];
   myProductsListSub: Subscription;
@@ -25,7 +24,6 @@ export class MyproductsComponent implements OnInit, OnDestroy {
   isSeller: boolean = false;
   checkEmail: boolean = false;
   noProducts: boolean = false;
-  disableSaveCart: boolean = true;
   updatedProductIndex: number = -1;
   purchase: number = 0;
   product: Product = {
@@ -58,25 +56,29 @@ export class MyproductsComponent implements OnInit, OnDestroy {
       }
     }
     if (this.authService.isAuthenticated) {
-      this.cartService.getCarts().subscribe((res: Cart[]) => {
-        for (let i = 0; i < res.length; i++) {
-          if (res[i].userEmail === this.authService.userDataToBeShared.email) {
-            this.checkEmail = true;
-            localStorage.setItem('userFname', res[i].userFirstName);
-            break;
+      this.myProductsListSub = this.cartService
+        .getCarts()
+        .subscribe((res: Cart[]) => {
+          for (let i = 0; i < res.length; i++) {
+            if (
+              res[i].userEmail === this.authService.userDataToBeShared.email
+            ) {
+              this.checkEmail = true;
+              localStorage.setItem('userFname', res[i].userFirstName);
+              break;
+            }
           }
-        }
-        if (!this.checkEmail) {
-          res.push({
-            userEmail: this.authService.userDataToBeShared.email,
-            cartProducts: [],
-            myProducts: [],
-            userFirstName: localStorage.getItem('userFname'),
-          });
+          if (!this.checkEmail) {
+            res.push({
+              userEmail: this.authService.userDataToBeShared.email,
+              cartProducts: [],
+              myProducts: [],
+              userFirstName: localStorage.getItem('userFname'),
+            });
 
-          this.cartService.addCart(res);
-        }
-      });
+            this.cartService.addCart(res);
+          }
+        });
     }
     this.productsListSub = this.productService
       .getProductList()
@@ -104,7 +106,7 @@ export class MyproductsComponent implements OnInit, OnDestroy {
         });
 
       this.contentLoaded = true;
-    }, 1200);
+    }, 1500);
   }
 
   private initForm(product: Product) {

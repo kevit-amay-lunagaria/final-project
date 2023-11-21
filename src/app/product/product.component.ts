@@ -14,17 +14,13 @@ import { Router } from '@angular/router';
   styleUrls: ['./product.component.css'],
 })
 export class ProductComponent implements OnInit, OnDestroy {
-  cart: Cart;
   productList: Product[] = [];
   cartList: Product[] = [];
   productListSub: Subscription;
-  newProductToggle: boolean = false;
   contentLoaded: boolean = false;
   itemsAdded: boolean = false;
   checkEmail: boolean = false;
   disableSaveCart: boolean = true;
-  updatedProductIndex: number = -1;
-  purchase: number = 0;
 
   constructor(
     private productService: ProductService,

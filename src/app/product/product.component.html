@@ -26,12 +26,14 @@
       *ngFor="let product of productList; index as i"
     >
       <mat-card-header class="h-full">
-        <img
-          [ngClass]="{ grayscale: product.productQuantity == 0 }"
-          style="width: 112px; height: 112px; object-fit: cover"
-          class="flex-col mb-4 rounded-md"
-          [src]="product.productImage"
-        />
+        <div class="flex-col mb-4" style="width: 160px; height: 112px">
+          <img
+            [ngClass]="{ grayscale: product.productQuantity == 0 }"
+            style="width: 112px; height: 112px; object-fit: cover"
+            class="rounded-md"
+            [src]="product.productImage"
+          />
+        </div>
         <mat-card-title-group class="flex-col pl-4">
           <mat-card-title>
             <span class="text-lg font-bold line-clamp-3">

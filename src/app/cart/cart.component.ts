@@ -2,7 +2,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Product } from '../product/product.model';
 import { ProductService } from '../product/product.service';
 import { CartService } from './cart.service';
-import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import Swal from 'sweetalert2';
@@ -28,8 +27,6 @@ export class CartComponent implements OnInit, OnDestroy {
     private productService: ProductService,
     private cartService: CartService,
     private authService: AuthService,
-    private router: Router,
-    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
