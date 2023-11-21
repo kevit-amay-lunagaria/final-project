@@ -95,7 +95,7 @@ export class CartComponent implements OnInit, OnDestroy {
           }
           this.cartList = this.productList;
         });
-    }, 2000);
+    }, 2500);
   }
 
   onIncrement(index: number) {

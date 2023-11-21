@@ -27,13 +27,14 @@
     >
       <mat-card-header class="h-full">
         <img
-          mat-card-md-image
-          class="flex-col object-cover mb-4 rounded-md"
+          [ngClass]="{ grayscale: product.productQuantity == 0 }"
+          style="width: 112px; height: 112px; object-fit: cover"
+          class="flex-col mb-4 rounded-md"
           [src]="product.productImage"
         />
         <mat-card-title-group class="flex-col pl-4">
           <mat-card-title>
-            <span class="text-lg font-bold">
+            <span class="text-lg font-bold line-clamp-3">
               {{ product.productName }}
             </span>
           </mat-card-title>
@@ -47,6 +48,7 @@
           </mat-card-subtitle>
           <div class="flex flex-row justify-center mt-auto" *ngIf="!isSeller">
             <div
+              *ngIf="product.productQuantity != 0"
               class="flex flex-row items-center justify-center my-4 align-middle"
             >
               <button

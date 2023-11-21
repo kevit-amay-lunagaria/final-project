@@ -41,18 +41,9 @@
             </span>
           </a>
         </li>
-        <li class="ml-auto" *ngIf="isAuthenticated">
-          <a class="px-2 py-4 font-semibold">
-            <span class="text-[#dbe2ef] rounded-full p-[7px]">
-              {{ fname }}
-            </span>
-          </a>
-        </li>
-        <li
-          appDropDown
-          class="flex"
-          [ngClass]="{ 'ml-auto': !isAuthenticated }"
-        >
+
+        <!-- [ngClass]="{ 'ml-auto': !isAuthenticated }" -->
+        <li class="flex ml-auto">
           <button
             (click)="showAvatarOptions = !showAvatarOptions"
             (mouseover)="showAvatarOptions = true"
@@ -66,18 +57,32 @@
 
           <ul
             *ngIf="showAvatarOptions"
-            class="absolute py-2 ml-[-130px] mt-[60px] space-y-2 bg-white border rounded-md border-slate-200"
+            class="absolute py-2 ml-[-150px] mt-[60px] space-y-2 bg-white border rounded-md border-slate-200"
           >
             <li
               class="px-10 active:bg-[#3F73AF] active:text-white hover:bg-slate-200"
+              *ngIf="isAuthenticated"
+            >
+              <a class="flex">
+                <span class="rounded-full p-[7px] material-symbols-outlined">
+                  person
+                </span>
+                <span class="p-[5px] capitalize">
+                  {{ fname }}
+                </span>
+              </a>
+            </li>
+            <li
+              routerLink="/auth"
+              class="px-10 active:bg-[#3F73AF] active:text-white hover:bg-slate-200 cursor-pointer"
             >
               <button>
-                <a routerLink="/auth" class="flex">
-                  <span class="p-[5px]"
-                    >{{ isAuthenticated ? "Logout" : "Login" }}
-                  </span>
+                <a class="flex">
                   <span class="rounded-full p-[7px] material-symbols-outlined">
                     {{ isAuthenticated ? "logout" : "login" }}
+                  </span>
+                  <span class="p-[5px]">
+                    {{ isAuthenticated ? "Logout" : "Login" }}
                   </span>
                 </a>
               </button>

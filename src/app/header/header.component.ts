@@ -25,8 +25,4 @@ export class HeaderComponent implements OnInit, DoCheck {
     this.fname = localStorage.getItem('userFname');
     this.isAuthenticated = this.authService.isAuthenticated;
   }
-
-  // showOptions() {
-  //   this.showAvatarOptions = !this.showAvatarOptions;
-  // }
 }

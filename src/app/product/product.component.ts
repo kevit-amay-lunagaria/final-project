@@ -61,7 +61,7 @@ export class ProductComponent implements OnInit, OnDestroy {
         .getProductList()
         .subscribe((res: Product[]) => {
           this.productList = res.slice();
-          if (this.cartList != undefined) {
+          if (this.cartList != undefined && this.cartList.length != 0) {
             this.disableSaveCart = false;
             for (let i = 0; i < this.cartList.length; i++) {
               const index = this.productList.findIndex(
@@ -82,7 +82,7 @@ export class ProductComponent implements OnInit, OnDestroy {
           }
         });
       this.contentLoaded = true;
-    }, 1200);
+    }, 1800);
   }
 
   onIncrement(index: number) {
@@ -147,6 +147,7 @@ export class ProductComponent implements OnInit, OnDestroy {
         timer: 1800,
         timerProgressBar: true,
       });
+      this.router.navigate(['/auth']);
     }
   }
 

@@ -17,18 +17,18 @@
       <div class="flex flex-row justify-around" *ngIf="!isLogin">
         <input
           id="userFirstName"
-          class="my-4 text-center mr-1 font-semibold border-b-[2px] border-b-blue-500"
+          class="my-4 text-center mr-1 capitalize font-semibold border-b-[2px] border-b-blue-500"
           type="text"
           formControlName="userFirstName"
-          placeholder="first name"
+          placeholder="First name"
           autocomplete="off"
         />
         <input
           id="userLastName"
-          class="my-4 text-center ml-1 font-semibold border-b-[2px] border-b-blue-500"
+          class="my-4 text-center ml-1 capitalize font-semibold border-b-[2px] border-b-blue-500"
           type="text"
           formControlName="userLastName"
-          placeholder="last name"
+          placeholder="Last name"
           autocomplete="off"
         />
       </div>
@@ -47,7 +47,7 @@
         class="my-4 text-center ml-1 font-semibold border-b-[2px] border-b-blue-500"
         type="password"
         formControlName="userPassword"
-        placeholder="password"
+        placeholder="Password"
         autocomplete="off"
         minlength="8"
       />
