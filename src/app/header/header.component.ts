@@ -22,7 +22,7 @@ export class HeaderComponent implements OnInit, DoCheck {
     } else {
       this.isSeller = false;
     }
-    this.fname = localStorage.getItem('userFname');
+    this.fname = localStorage.getItem('userFullName');
     this.isAuthenticated = this.authService.isAuthenticated;
   }
 }

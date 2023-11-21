@@ -4,7 +4,7 @@ export class Cart {
   public userEmail: string;
   public cartProducts: Product[];
   public myProducts: Product[];
-  public userFirstName: string;
+  public userFullName: string;
 
   constructor(
     email: string,
@@ -15,6 +15,6 @@ export class Cart {
     this.userEmail = email;
     this.cartProducts = addedProducts;
     this.myProducts = products;
-    this.userFirstName = fname;
+    this.userFullName = fname;
   }
 }

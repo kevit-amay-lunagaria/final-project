@@ -64,7 +64,7 @@ export class MyproductsComponent implements OnInit, OnDestroy {
               res[i].userEmail === this.authService.userDataToBeShared.email
             ) {
               this.checkEmail = true;
-              localStorage.setItem('userFname', res[i].userFirstName);
+              localStorage.setItem('userFullName', res[i].userFullName);
               break;
             }
           }
@@ -73,7 +73,7 @@ export class MyproductsComponent implements OnInit, OnDestroy {
               userEmail: this.authService.userDataToBeShared.email,
               cartProducts: [],
               myProducts: [],
-              userFirstName: localStorage.getItem('userFname'),
+              userFullName: localStorage.getItem('userFullName'),
             });
 
             this.cartService.addCart(res);
