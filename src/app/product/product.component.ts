@@ -105,9 +105,7 @@ export class ProductComponent implements OnInit, OnDestroy {
       }
       if (!zeroItems) {
         this.itemsAdded = true;
-        setTimeout(() => {
-          this.cartService.getAddedProducts(this.cartList);
-        }, 200);
+        this.cartService.getAddedProducts(this.cartList);
         this.productService.updateProductList(this.productList);
         Swal.fire({
           position: 'bottom-right',

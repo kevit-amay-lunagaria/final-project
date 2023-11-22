@@ -26,19 +26,19 @@ export class CartComponent implements OnInit, OnDestroy {
   constructor(
     private productService: ProductService,
     private cartService: CartService,
-    private authService: AuthService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
-    this.cartService.getCarts().subscribe((res) => {
-      for (let i = 0; i < res.length; i++) {
-        if (res[i].userEmail == this.authService.userDataToBeShared.email) {
-          this.cartList = res[i].cartProducts;
-          break;
-        }
-      }
-    });
     setTimeout(() => {
+      this.cartService.getCarts().subscribe((res) => {
+        for (let i = 0; i < res.length; i++) {
+          if (res[i].userEmail == this.authService.userDataToBeShared.email) {
+            this.cartList = res[i].cartProducts;
+            break;
+          }
+        }
+      });
       this.productListSub = this.productService
         .getProductList()
         .subscribe((res: Product[]) => {
@@ -92,7 +92,7 @@ export class CartComponent implements OnInit, OnDestroy {
           }
           this.cartList = this.productList;
         });
-    }, 2500);
+    }, 2000);
   }
 
   onIncrement(index: number) {
