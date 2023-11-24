@@ -5,7 +5,7 @@
     (click)="onSaveCart()"
     class="p-2 px-5 ml-auto font-medium text-white rounded-lg bg-[#3f73af] hover:bg-[#274f79] hover:font-semibold"
   >
-    Add to Cart
+    Add and save cart
   </button>
 </div>
 
@@ -22,6 +22,7 @@
   <div class="flex flex-row flex-wrap justify-center">
     <!-- PRODUCT CARD STARTS HERE -->
     <mat-card
+      [ngClass]="{ 'opacity-50': product.productQuantity == 0 }"
       class="m-4 w-[280px] product-card md:w-[300px] lg:w-[400px]"
       *ngFor="let product of productList; index as i"
     >
@@ -50,7 +51,9 @@
           </mat-card-subtitle>
           <div class="flex flex-row justify-center mt-auto" *ngIf="!isSeller">
             <div
-              *ngIf="product.productQuantity != 0"
+              *ngIf="
+                !(product.productQuantity == 0 && product.productPurchased == 0)
+              "
               class="flex flex-row items-center justify-center my-4 align-middle"
             >
               <button

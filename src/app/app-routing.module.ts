@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { ErrorPageComponent } from './error-page/error-page.component';
 import { AuthGuard } from './auth/auth-guard';
+import { hasUnsavedChanges } from './shared/canDeactivate.service';
 
 const routes: Routes = [
   { path: '', redirectTo: '/products', pathMatch: 'full' },
@@ -14,6 +15,7 @@ const routes: Routes = [
     path: 'products',
     loadChildren: () =>
       import('./product/product.module').then((pdt) => pdt.ProductModule),
+    canDeactivate: [hasUnsavedChanges],
   },
   {
     path: 'myproducts',

@@ -37,6 +37,7 @@ export class AuthComponent implements OnInit {
   }
 
   onLogin() {
+    // this.userForm.reset();
     this.isLogin = !this.isLogin;
   }
 

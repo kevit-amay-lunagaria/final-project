@@ -30,15 +30,15 @@ export class CartComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    setTimeout(() => {
-      this.cartService.getCarts().subscribe((res) => {
-        for (let i = 0; i < res.length; i++) {
-          if (res[i].userEmail == this.authService.userDataToBeShared.email) {
-            this.cartList = res[i].cartProducts;
-            break;
-          }
+setTimeout(() => {
+    this.cartService.getCarts().subscribe((res) => {
+      for (let i = 0; i < res.length; i++) {
+        if (res[i].userEmail == this.authService.userDataToBeShared.email) {
+          this.cartList = res[i].cartProducts;
+          break;
         }
-      });
+      }
+    });
       this.productListSub = this.productService
         .getProductList()
         .subscribe((res: Product[]) => {
@@ -84,13 +84,13 @@ export class CartComponent implements OnInit, OnDestroy {
             }
           }
 
-          this.contentLoaded = true;
           if (this.productList.length == 0) {
             this.isProductListEmpty = true;
           } else {
             this.isProductListEmpty = false;
           }
           this.cartList = this.productList;
+          this.contentLoaded = true;
         });
     }, 2000);
   }
@@ -117,10 +117,10 @@ export class CartComponent implements OnInit, OnDestroy {
       );
 
       this.totalItems--;
-
       this.subTotal -=
         this.productList[index].productPrice *
         this.productList[index].productPurchased;
+
       this.changedProductList[changedIndex].productPurchased = 0;
       this.productList[index].productQuantity++;
       this.productList.splice(index, 1);

@@ -27,6 +27,7 @@ export class MyproductsComponent implements OnInit, OnDestroy {
   updatedProductIndex: number = -1;
   purchase: number = 0;
   product: Product = {
+    id: -1,
     productName: null,
     productImage: null,
     productPrice: null,
@@ -117,6 +118,7 @@ export class MyproductsComponent implements OnInit, OnDestroy {
     let purchased = 0;
 
     this.productForm = new FormGroup({
+      id: new FormControl(this.idGenerator()),
       productName: new FormControl(name, [Validators.required]),
       productImage: new FormControl(imageurl, [
         Validators.required,
@@ -131,17 +133,22 @@ export class MyproductsComponent implements OnInit, OnDestroy {
     });
   }
 
-  findProductIndex(product: Product) {
-    for (let i = 0; i < this.productsList.length; i++) {
-      if (this.productsList[i].productName == product.productName) {
-        return i;
-      }
-    }
+  // findProductIndex(product: Product) {
+  //   for (let i = 0; i < this.productsList.length; i++) {
+  //     if (this.productsList[i].productName == product.productName) {
+  //       return i;
+  //     }
+  //   }
+  // }
+
+  private idGenerator() {
+    return Math.round(Math.random() * Math.pow(10, 10));
   }
 
   onAddNewProductToggle() {
     this.initForm(this.product);
     this.newProductToggle = !this.newProductToggle;
+    console.log(this.idGenerator());
   }
 
   onCancel() {

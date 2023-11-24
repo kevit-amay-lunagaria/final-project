@@ -1,26 +1,32 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ProductService } from './product.service';
 import { Product } from './product.model';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { CartService } from '../cart/cart.service';
 import { AuthService } from '../auth/auth.service';
 import { Cart } from '../cart/cart.model';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
+import { CanComponentDeactivate } from '../shared/canDeactivate.service';
+
+export let objCheck: boolean = false;
 
 @Component({
   selector: 'app-product',
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.css'],
 })
-export class ProductComponent implements OnInit, OnDestroy {
+export class ProductComponent
+  implements OnInit, OnDestroy, CanComponentDeactivate
+{
   productList: Product[] = [];
   cartList: Product[] = [];
   productListSub: Subscription;
   contentLoaded: boolean = false;
   itemsAdded: boolean = false;
   checkEmail: boolean = false;
-  disableSaveCart: boolean = true;
+  cartSaved: boolean = false;
+  detectChange: object = {};
 
   constructor(
     private productService: ProductService,
@@ -58,7 +64,6 @@ export class ProductComponent implements OnInit, OnDestroy {
         .subscribe((res: Product[]) => {
           this.productList = res.slice();
           if (this.cartList != undefined && this.cartList.length != 0) {
-            this.disableSaveCart = false;
             for (let i = 0; i < this.cartList.length; i++) {
               const index = this.productList.findIndex(
                 (e) => e.productName === this.cartList[i].productName
@@ -82,21 +87,44 @@ export class ProductComponent implements OnInit, OnDestroy {
   }
 
   onIncrement(index: number) {
-    if (this.productList[index].productQuantity == 0) return;
+    if (this.productList[index].productQuantity == 0) {
+      return;
+    }
+
     this.productList[index].productQuantity--;
     this.productList[index].productPurchased++;
+
+    objCheck = true;
+
+    this.detectChange[this.productList[index].id] =
+      this.productList[index].productPurchased;
   }
 
   onDecrement(index: number) {
     if (this.productList[index].productPurchased == 0) return;
+
+    objCheck = true;
+
     this.productList[index].productQuantity++;
     this.productList[index].productPurchased--;
+    this.detectChange[this.productList[index].id] =
+      this.productList[index].productPurchased;
+
+    if (this.productList[index].productPurchased == 0) {
+      delete this.detectChange[this.productList[index].id];
+
+      if (!Object.keys(this.detectChange).length) {
+        objCheck = false;
+      }
+    }
   }
 
   onSaveCart() {
     if (this.authService.isAuthenticated) {
       this.cartList = [];
       let zeroItems = true;
+      this.cartSaved = true;
+      objCheck = false;
       for (let i = 0; i < this.productList.length; i++) {
         if (this.productList[i].productPurchased != 0) {
           zeroItems = false;
@@ -144,6 +172,8 @@ export class ProductComponent implements OnInit, OnDestroy {
       this.router.navigate(['/auth']);
     }
   }
+
+  canDeactivate: () => boolean | Observable<boolean> | Promise<boolean>;
 
   ngOnDestroy(): void {
     if (this.contentLoaded) {

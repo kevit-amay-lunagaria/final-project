@@ -6,6 +6,7 @@ import { Product } from './product.model';
   providedIn: 'root',
 })
 export class ProductService {
+  userMadeChanges: boolean = false;
   private url =
     'https://product-shop-5610d-default-rtdb.asia-southeast1.firebasedatabase.app/products.json';
 
