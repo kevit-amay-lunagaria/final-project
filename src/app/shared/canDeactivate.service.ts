@@ -22,6 +22,8 @@ export const hasUnsavedChanges: CanDeactivateFn<CanComponentDeactivate> = (
       title: 'Some changes were detected...',
       text: 'Are you sure that you want to discard the changes?',
       icon: 'warning',
+      allowOutsideClick: false,
+      allowEscapeKey: false,
       showConfirmButton: true,
       confirmButtonText: 'Yes',
       showCancelButton: true,

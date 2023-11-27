@@ -97,7 +97,7 @@
           min="1"
           placeholder="E.g. 10  (< 1000)"
           formControlName="productQuantity"
-          onkeypress="return (event.charCode == 8 || event.charCode == 0) ? null : event.charCode >= 48 && event.charCode <= 57"
+          (keypress)="checkForNumbers($event)"
         />
       </div>
       <div class="flex flex-row items-center justify-around w-full">
@@ -113,7 +113,7 @@
           min="10"
           placeholder="E.g. &#x20b9;50  (10 to 99999)"
           formControlName="productPrice"
-          onkeypress="return (event.charCode == 8 || event.charCode == 0) ? null : event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46"
+          (keypress)="checkForNumbers($event)"
         />
       </div>
     </div>
@@ -188,6 +188,25 @@
               Available: {{ product.productQuantity }}
             </span>
           </mat-card-subtitle>
+          <div
+            class="flex flex-row items-center justify-between mb-3 align-middle"
+            *ngIf="isSeller"
+          >
+            <button
+              type="button"
+              (click)="onEditProduct(i)"
+              class="px-2 py-1 text-blue-700 rounded-md hover:bg-blue-100"
+            >
+              <span class="text-xl material-symbols-outlined"> edit </span>
+            </button>
+            <button
+              type="button"
+              class="px-2 py-1 text-red-700 rounded-md hover:bg-red-100"
+              (click)="onDeleteProduct(i)"
+            >
+              <span class="text-xl material-symbols-outlined"> delete </span>
+            </button>
+          </div>
         </mat-card-title-group>
       </mat-card-header>
     </mat-card>

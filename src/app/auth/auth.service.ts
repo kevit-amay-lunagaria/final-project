@@ -67,6 +67,8 @@ export class AuthService {
             icon: 'error',
             title: 'Oops...',
             text: error,
+            allowOutsideClick: false,
+            allowEscapeKey: false,
           });
         },
       });
@@ -101,6 +103,8 @@ export class AuthService {
             icon: 'error',
             title: 'Oops...',
             text: error,
+            allowOutsideClick: false,
+            allowEscapeKey: false,
           });
         },
       });
