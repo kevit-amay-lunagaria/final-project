@@ -91,12 +91,13 @@
           Quantity:
         </label>
         <input
-          class="px-3 m-1 mx-3 w-[60%] text-md product-input text-center"
+          class="px-3 m-1 mx-3 w-[60%] text-md product-input text-center no-paste"
           type="number"
           max="1000"
           min="1"
           placeholder="E.g. 10  (< 1000)"
           formControlName="productQuantity"
+          (paste)="noPaste($event)"
           (keypress)="checkForNumbers($event)"
         />
       </div>
@@ -107,12 +108,14 @@
         </label>
         &#x20b9;
         <input
+          id="no-paste"
           class="px-3 m-1 w-[60%] mx-3 text-md product-input text-center"
           type="number"
           max="99999"
           min="10"
           placeholder="E.g. &#x20b9;50  (10 to 99999)"
           formControlName="productPrice"
+          (paste)="noPaste($event)"
           (keypress)="checkForNumbers($event)"
         />
       </div>

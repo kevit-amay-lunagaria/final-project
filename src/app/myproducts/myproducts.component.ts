@@ -207,6 +207,11 @@ export class MyproductsComponent implements OnInit, OnDestroy {
       : event.charCode >= 48 && event.charCode <= 57;
   }
 
+  noPaste(e: Event) {
+    e.preventDefault();
+    return false;
+  }
+
   findProductIndex(product: Product) {
     for (let i = 0; i < this.productsList.length; i++) {
       if (this.productsList[i].id == product.id) {

@@ -14,9 +14,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   fname: string = '';
   showAvatarOptions: boolean = false;
   userSub: Subscription;
-  constructor(private authService: AuthService, private router: Router) {
-    this.fname = localStorage.getItem('userFullName');
-  }
+  constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
     this.userSub = this.authService.user.subscribe((res) => {
@@ -26,18 +24,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.isSeller = false;
       }
       this.isAuthenticated = !!res;
+      this.fname = this.authService.userFullName;
     });
   }
-
-  // ngDoCheck(): void {
-  //   if (this.authService.userRole === 'seller') {
-  //     this.isSeller = true;
-  //   } else {
-  //     this.isSeller = false;
-  //   }
-  //   this.fname = localStorage.getItem('userFullName');
-  //   this.isAuthenticated = this.authService.isAuthenticated;
-  // }
 
   ngOnDestroy(): void {
     this.userSub.unsubscribe();
